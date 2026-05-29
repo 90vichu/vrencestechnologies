@@ -1,0 +1,2089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vrences Technologies — AI Compliance Intelligence for Financial Institutions</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #2d1b69;
+    --dark: #1a0f3d;
+    --mid: #5a4a7f;
+    --muted: #8b7aa3;
+    --light: #f5f2ff;
+    --white: #ffffff;
+    --accent-blue: #7c5ceb;
+    --accent-teal: #a78bdb;
+    --accent-amber: #d4a5ff;
+    --border: #e9dff7;
+    --red: #ef4444;
+    --orange: #f97316;
+    --green: #22c55e;
+    --badge-bg: #ede9f6;
+    --badge-text: #7c5ceb;
+    --lavender-light: #f3ecff;
+    --lavender-mid: #d4c5e2;
+    --purple-dark: #2d1b69;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--dark);
+    background: var(--white);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── PAGE TRANSITIONS ── */
+  .page {
+    display: none;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.42s cubic-bezier(0.4,0,0.2,1), transform 0.42s cubic-bezier(0.4,0,0.2,1);
+  }
+  .page.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .page.leaving {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(225,215,255,0.92);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 100px;
+    transition: box-shadow 0.3s ease, background 0.3s ease;
+  }
+  nav.scrolled {
+    background: rgba(220,208,252,0.97);
+    border-color: rgba(200,185,240,0.95);
+    box-shadow: 0 12px 40px rgba(124, 92, 235, 0.1);
+  }
+
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-weight: 700; font-size: 22px;
+    color: #2d1b69; text-decoration: none;
+    letter-spacing: -0.015em;
+    transition: opacity 0.2s;
+  }
+  .nav-logo:hover { opacity: 0.78; }
+
+  .hamburger-menu {
+    display: none;
+    width: 40px; height: 40px;
+    background: none; border: none; cursor: pointer;
+    flex-direction: column; justify-content: center; align-items: center;
+    gap: 5px; transition: all 0.3s ease;
+    padding: 0; z-index: 101;
+  }
+  .hamburger-menu span {
+    display: block; width: 24px; height: 2.5px;
+    background: var(--dark); border-radius: 2px;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+  .hamburger-menu.active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+  }
+  .hamburger-menu.active span:nth-child(2) {
+    opacity: 0;
+  }
+  .hamburger-menu.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(8px, -8px);
+  }
+
+  .mobile-nav {
+    display: none;
+    position: fixed; top: 100px; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(180deg, rgba(243,236,255,0.98) 0%, rgba(233,223,247,0.96) 100%);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    padding: 24px; z-index: 99;
+    overflow-y: auto;
+    animation: slideDown 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+  .mobile-nav.active {
+    display: block;
+  }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .mobile-nav a {
+    display: block; padding: 16px 0;
+    font-size: 15.5px; color: var(--mid); text-decoration: none; font-weight: 500;
+    border-bottom: 1px solid rgba(200,185,240,0.4);
+    transition: color 0.22s;
+    cursor: pointer;
+  }
+  .mobile-nav a:last-child {
+    border-bottom: none;
+  }
+  .mobile-nav a:hover { color: var(--accent-blue); }
+  .mobile-nav a.active { color: var(--accent-blue); font-weight: 600; }
+
+  .nav-links {
+    display: flex; align-items: center; gap: 34px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 14.5px; color: var(--mid); text-decoration: none; font-weight: 400;
+    transition: color 0.22s;
+    cursor: pointer;
+    position: relative;
+    padding-bottom: 2px;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -2px; left: 0; right: 0;
+    height: 1.5px;
+    background: var(--accent-blue);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+  .nav-links a:hover { color: var(--dark); }
+  .nav-links a:hover::after,
+  .nav-links a.active::after { transform: scaleX(1); }
+  .nav-links a.active { color: var(--accent-blue); font-weight: 500; }
+
+  .nav-actions { display: flex; align-items: center; gap: 12px; }
+
+  .btn-outline {
+    padding: 9px 20px; border: 1.5px solid var(--border);
+    border-radius: 9px; font-size: 14px; font-family: 'DM Sans', sans-serif;
+    background: white; color: var(--dark); cursor: pointer;
+    font-weight: 500; transition: border-color .22s, background .22s, box-shadow .22s, transform .22s;
+    text-decoration: none;
+  }
+  .btn-outline:hover {
+    border-color: var(--accent-blue);
+    background: rgba(124,92,235,0.04);
+    box-shadow: 0 4px 12px rgba(124,92,235,0.1);
+    transform: translateY(-1px);
+  }
+
+  .btn-primary {
+    padding: 10px 22px; border-radius: 9px; border: none;
+    background: linear-gradient(135deg, var(--dark), var(--accent-blue));
+    color: white; font-size: 14px;
+    font-family: 'DM Sans', sans-serif; font-weight: 500;
+    cursor: pointer; transition: all .3s;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    position: relative; overflow: hidden;
+  }
+  .btn-primary::before {
+    content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.55s;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(124, 92, 235, 0.42);
+  }
+  .btn-primary:hover::before { left: 100%; }
+
+  /* ── HERO ── */
+  #hero-page {
+    min-height: calc(100vh - 100px);
+    background: linear-gradient(135deg, #ffffff 0%, #f3ecff 35%, #e9dff7 70%, #f0e6ff 100%);
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; text-align: center;
+    padding: 80px 24px 60px;
+    position: relative; overflow: hidden;
+  }
+
+  /* Canvas animation sits behind everything */
+  #hero-canvas {
+    position: absolute; inset: 0;
+    pointer-events: none; z-index: 0;
+  }
+
+  .hero-glow-left {
+    position: absolute;
+    width: 460px; height: 460px;
+    background: radial-gradient(circle, rgba(212, 165, 255, 0.28) 0%, transparent 68%);
+    top: 4%; left: -4%;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float-blob 14s ease-in-out infinite;
+    z-index: 0;
+  }
+  .hero-glow-right {
+    position: absolute;
+    width: 380px; height: 380px;
+    background: radial-gradient(circle, rgba(124, 92, 235, 0.18) 0%, transparent 68%);
+    bottom: 8%; right: 2%;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float-blob 11s ease-in-out infinite reverse;
+    z-index: 0;
+  }
+  .hero-glow-center {
+    position: absolute;
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(212, 165, 255, 0.1) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    pointer-events: none;
+    animation: pulse-glow 8s ease-in-out infinite;
+    z-index: 0;
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column; align-items: center;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.92); border: 1.5px solid var(--border);
+    border-radius: 100px; padding: 9px 20px;
+    font-size: 13px; color: var(--mid);
+    margin-bottom: 36px; box-shadow: 0 4px 20px rgba(124, 92, 235, 0.12);
+    animation: slide-up 0.65s ease-out both;
+    position: relative; overflow: hidden;
+  }
+  .hero-badge::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(212,165,255,0.25) 50%, transparent 100%);
+    border-radius: 100px;
+    animation: badge-shimmer 4s ease-in-out infinite;
+    background-size: 200% 100%;
+  }
+  .hero-badge .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #22c55e; display: inline-block; flex-shrink: 0;
+    animation: pulse-dot 2s ease-in-out infinite;
+    box-shadow: 0 0 6px rgba(34,197,94,0.5);
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(46px, 5.5vw, 72px);
+    font-weight: 700; line-height: 1.1;
+    color: var(--dark); max-width: 980px;
+    margin-bottom: 26px;
+    animation: slide-up 0.75s ease-out 0.1s both;
+    letter-spacing: -0.02em;
+  }
+  .hero-title .colorful {
+    background: linear-gradient(90deg, #7c5ceb 0%, #d4a5ff 55%, #a78bdb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 17.5px; color: var(--muted); max-width: 540px;
+    line-height: 1.75; margin-bottom: 44px;
+    animation: slide-up 0.75s ease-out 0.2s both;
+  }
+
+  .hero-cta {
+    display: flex; gap: 14px; justify-content: center;
+    flex-wrap: wrap; margin-bottom: 52px;
+    animation: slide-up 0.75s ease-out 0.3s both;
+  }
+
+  .btn-lg { padding: 14px 30px; font-size: 15.5px; border-radius: 10px; }
+
+  .btn-secondary-lg {
+    padding: 13px 28px; border: 1.5px solid var(--border);
+    border-radius: 10px; font-size: 15px; font-family: 'DM Sans', sans-serif;
+    background: rgba(255,255,255,0.88); color: var(--dark); cursor: pointer;
+    font-weight: 500; transition: all .25s;
+    display: inline-flex; align-items: center; gap: 8px;
+    text-decoration: none;
+  }
+  .btn-secondary-lg:hover {
+    border-color: var(--accent-blue); color: var(--accent-blue);
+    background: rgba(255,255,255,0.96);
+    box-shadow: 0 6px 20px rgba(124,92,235,0.12);
+    transform: translateY(-2px);
+  }
+
+  .hero-trust {
+    display: flex; align-items: center; gap: 26px;
+    font-size: 13px; color: var(--muted);
+    flex-wrap: wrap; justify-content: center;
+    animation: slide-up 0.75s ease-out 0.4s both;
+  }
+  .hero-trust span { display: flex; align-items: center; gap: 6px; }
+  .hero-trust .sep { color: var(--border); font-size: 18px; }
+
+  /* ── SECTIONS COMMON ── */
+  section {
+    padding: 100px 48px;
+    position: relative;
+  }
+
+  .section-label {
+    font-size: 12px; font-weight: 600; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent-blue);
+    margin-bottom: 18px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 3.5vw, 48px);
+    font-weight: 700; line-height: 1.16; color: var(--dark);
+    max-width: 640px; margin-bottom: 22px;
+    letter-spacing: -0.02em;
+  }
+
+  .section-sub {
+    font-size: 16px; color: var(--muted);
+    max-width: 520px; line-height: 1.75; margin-bottom: 56px;
+  }
+
+  /* ── METRICS PAGE ── */
+  #metrics-page section {
+    background: #f9f7ff;
+  }
+  #metrics-page section::before {
+    content: '';
+    position: absolute;
+    top: 8%; right: 4%;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(212,165,255,0.14), transparent 70%);
+    border-radius: 50%;
+    animation: float-blob 9s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px;
+    margin-bottom: 36px;
+  }
+
+  .stat-card {
+    background: white; border: 1px solid var(--border);
+    border-radius: 16px; padding: 32px 26px;
+    transition: box-shadow 0.35s ease, transform 0.35s ease;
+    position: relative; overflow: hidden;
+    cursor: default;
+  }
+  .stat-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(212, 165, 255, 0.06), rgba(124, 92, 235, 0.06));
+    opacity: 0; transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .stat-card::after {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--dark), var(--accent-blue), var(--accent-amber));
+    opacity: 0; transition: opacity 0.3s ease;
+  }
+  .stat-card:hover {
+    box-shadow: 0 16px 44px rgba(124, 92, 235, 0.2), inset 0 0 24px rgba(212, 165, 255, 0.08);
+    transform: translateY(-6px);
+  }
+  .stat-card:hover::before { opacity: 1; }
+  .stat-card:hover::after { opacity: 1; }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 44px; font-weight: 700; color: var(--dark);
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, var(--dark), var(--accent-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .stat-label {
+    font-size: 14.5px; font-weight: 600; color: var(--dark);
+    margin-bottom: 7px;
+  }
+
+  .stat-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  .tags-row {
+    display: flex; flex-wrap: wrap; gap: 11px;
+  }
+
+  .tag {
+    border: 1px solid var(--border); border-radius: 100px;
+    padding: 7px 16px; font-size: 13px; color: var(--mid);
+    background: white; transition: all 0.22s;
+    cursor: default;
+  }
+  .tag:hover {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+    background: rgba(124,92,235,0.04);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(124,92,235,0.1);
+  }
+
+  /* ── NOISE REDUCTION PAGE ── */
+  #noise-page section {
+    background: white;
+  }
+
+  .noise-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4vw, 56px);
+    font-weight: 700; line-height: 1.12;
+    color: var(--dark);
+    max-width: 780px;
+    margin-bottom: 28px;
+    letter-spacing: -0.02em;
+  }
+  .noise-headline .hl {
+    background: linear-gradient(90deg, #7c5ceb, #d4a5ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .noise-desc {
+    font-size: 16.5px; color: var(--muted);
+    max-width: 640px; line-height: 1.8; margin-bottom: 56px;
+  }
+
+  .noise-pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+
+  .noise-pillar {
+    background: #f9f7ff;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 32px 28px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .noise-pillar::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--dark), var(--accent-blue));
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .noise-pillar:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 18px 48px rgba(124,92,235,0.15);
+    background: white;
+  }
+  .noise-pillar:hover::before { opacity: 1; }
+
+  .noise-pillar-icon {
+    font-size: 28px; margin-bottom: 18px;
+    width: 52px; height: 52px;
+    background: var(--badge-bg);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .noise-pillar-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px; font-weight: 700;
+    color: var(--dark); margin-bottom: 10px;
+  }
+  .noise-pillar p {
+    font-size: 14px; color: var(--muted); line-height: 1.72;
+  }
+
+  /* ── PLATFORM ── */
+  #platform-page section { background: white; }
+
+  .platform-inner {
+    display: grid; grid-template-columns: 1fr 1.55fr; gap: 64px;
+    align-items: start;
+  }
+
+  .mock-browser {
+    background: white; border: 1.5px solid var(--border);
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 16px 52px rgba(124, 92, 235, 0.16);
+    position: relative;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+  }
+  .mock-browser:hover {
+    transform: translateY(-5px) perspective(1000px) rotateY(-1.5deg);
+    box-shadow: 0 24px 64px rgba(124, 92, 235, 0.22);
+  }
+
+  .mock-browser-bar {
+    background: #f3f4f6; padding: 13px 18px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .browser-dots { display: flex; gap: 7px; }
+  .browser-dots span {
+    width: 12px; height: 12px; border-radius: 50%; background: #d1d5db;
+    transition: background 0.2s;
+  }
+  .browser-dots span:first-child:hover { background: #ef4444; }
+  .browser-dots span:nth-child(2):hover { background: #f59e0b; }
+  .browser-dots span:nth-child(3):hover { background: #22c55e; }
+
+  .browser-url {
+    font-size: 12px; color: var(--muted);
+    font-family: monospace;
+  }
+
+  .browser-live {
+    font-size: 12px; color: var(--muted);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .live-dot {
+    width: 7px; height: 7px; border-radius: 50%; background: #22c55e;
+    animation: pulse-dot 2s ease-in-out infinite;
+    box-shadow: 0 0 6px rgba(34,197,94,0.5);
+  }
+
+  .mock-layout {
+    display: flex; min-height: 340px;
+  }
+
+  .mock-sidebar {
+    width: 165px; background: #faf8ff; border-right: 1px solid var(--border);
+    padding: 16px 13px; flex-shrink: 0;
+  }
+
+  .sidebar-label {
+    font-size: 10px; font-weight: 600; letter-spacing: .09em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 9px;
+  }
+
+  .sidebar-link {
+    display: block; padding: 8px 10px; border-radius: 8px;
+    font-size: 13px; color: var(--mid); margin-bottom: 2px;
+    cursor: pointer; text-decoration: none; transition: all .18s;
+  }
+  .sidebar-link:hover { background: rgba(124,92,235,0.07); color: var(--dark); }
+  .sidebar-link.active {
+    background: linear-gradient(135deg, var(--dark), var(--accent-blue));
+    color: white;
+  }
+
+  .sidebar-stats {
+    margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--border);
+  }
+  .sidebar-stat-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 4px; }
+  .sidebar-stat-num { font-size: 22px; font-weight: 700; color: var(--dark); font-family: 'Playfair Display', serif; }
+  .sidebar-stat-badge { font-size: 12px; color: var(--red); font-weight: 600; }
+
+  .mock-main { flex: 1; padding: 17px; overflow: auto; }
+
+  .queue-header { margin-bottom: 13px; display: flex; align-items: center; justify-content: space-between; }
+  .queue-label { font-size: 11px; color: var(--muted); }
+  .queue-title { font-size: 17px; font-weight: 700; color: var(--dark); font-family: 'Playfair Display', serif; }
+  .queue-meta { display: flex; align-items: center; gap: 8px; }
+  .ai-badge { background: var(--dark); color: white; font-size: 11px; padding: 3px 9px; border-radius: 6px; }
+  .last-24 { font-size: 11px; color: var(--muted); }
+
+  .alert-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .alert-table th {
+    text-align: left; font-size: 10px; font-weight: 600; letter-spacing: .07em;
+    text-transform: uppercase; color: var(--muted); padding: 6px 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .alert-table td { padding: 9px 8px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; transition: background 0.15s; }
+  .alert-table tr:last-child td { border-bottom: none; }
+  .alert-table tbody tr:hover td { background: rgba(124,92,235,0.05); }
+
+  .risk-bar { display: flex; align-items: center; gap: 8px; }
+  .bar-track { width: 80px; height: 5px; background: #e5e7eb; border-radius: 100px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 100px; transition: width 0.6s ease; }
+  .bar-high { background: var(--red); }
+  .bar-elevated { background: var(--orange); }
+  .bar-review { background: #eab308; }
+  .bar-low { background: var(--green); }
+  .risk-score { font-size: 12px; color: var(--mid); font-weight: 500; }
+
+  .disp-badge {
+    padding: 3px 9px; border-radius: 6px;
+    font-size: 11px; font-weight: 600;
+  }
+  .disp-high { background: #fee2e2; color: #dc2626; }
+  .disp-elevated { background: #ffedd5; color: #ea580c; }
+  .disp-review { background: #fef9c3; color: #ca8a04; }
+  .disp-low { background: #dcfce7; color: #16a34a; }
+
+  .signal-cards {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 13px;
+  }
+  .signal-card {
+    background: #f9fafb; border-radius: 9px; padding: 11px 13px;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+  .signal-card:hover { background: white; box-shadow: 0 4px 12px rgba(124,92,235,0.08); }
+  .signal-card-label { font-size: 9.5px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .signal-card-val { font-size: 12.5px; color: var(--dark); font-weight: 500; }
+
+  /* ── PROBLEM PAGE ── */
+  #problem-page section { background: #f9f7ff; }
+  #problem-page section::before {
+    content: '';
+    position: absolute;
+    top: 6%; right: 3%;
+    width: 340px; height: 340px;
+    background: radial-gradient(circle, rgba(212,165,255,0.15), transparent 70%);
+    border-radius: 50%;
+    animation: float-blob 11s ease-in-out infinite;
+    pointer-events: none;
+  }
+  #problem-page section::after {
+    content: '';
+    position: absolute;
+    bottom: 6%; left: 3%;
+    width: 260px; height: 260px;
+    background: radial-gradient(circle, rgba(124,92,235,0.1), transparent 70%);
+    border-radius: 50%;
+    animation: float-blob 14s ease-in-out infinite reverse;
+    pointer-events: none;
+  }
+
+  .problem-intro {
+    font-size: 16.5px; color: var(--mid); max-width: 820px;
+    line-height: 1.82; margin-bottom: 24px;
+  }
+
+  .problem-grid {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px;
+    margin-top: 48px;
+  }
+
+  .problem-card {
+    background: white; border: 1px solid var(--border);
+    border-radius: 18px; padding: 30px 26px;
+    box-shadow: 0 10px 32px rgba(107, 43, 193, 0.06);
+    transition: transform .28s ease, box-shadow .28s ease;
+    position: relative; overflow: hidden;
+  }
+  .problem-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--dark), var(--accent-blue), var(--accent-amber));
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .problem-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(124, 92, 235, 0.18);
+  }
+  .problem-card:hover::before { opacity: 1; }
+
+  .problem-card-icon {
+    font-size: 22px; margin-bottom: 16px;
+    width: 48px; height: 48px;
+    background: var(--badge-bg); border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .problem-card-title {
+    font-size: 17px; font-weight: 700; margin-bottom: 11px;
+    color: var(--dark); font-family: 'Playfair Display', serif;
+  }
+
+  .problem-card p {
+    color: var(--muted); line-height: 1.76; font-size: 14px;
+  }
+
+  .problem-conclusion {
+    margin-top: 56px;
+    background: linear-gradient(135deg, rgba(212,165,255,0.15), rgba(124,92,235,0.08));
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 44px 52px;
+    position: relative;
+    overflow: hidden;
+  }
+  .problem-conclusion::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--dark), var(--accent-blue), var(--accent-amber));
+  }
+
+  .problem-conclusion-text {
+    font-size: 19px; line-height: 1.75; color: var(--dark);
+    max-width: 800px; margin: 0 auto; text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+  }
+  .problem-conclusion-sub {
+    font-size: 15px; color: var(--mid);
+    max-width: 680px; margin: 20px auto 0;
+    text-align: center; line-height: 1.7;
+    font-family: 'DM Sans', sans-serif;
+    font-style: normal;
+  }
+
+  /* ── HOW IT WORKS PAGE ── */
+  #how-page section { background: #f9f7ff; }
+  #how-page section::after {
+    content: '';
+    position: absolute;
+    bottom: 8%; left: 3%;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(167, 139, 219, 0.12), transparent 70%);
+    border-radius: 50%;
+    animation: float-blob 10s ease-in-out infinite reverse;
+    pointer-events: none;
+  }
+
+  .steps-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;
+  }
+
+  .step-card {
+    background: white; border: 1px solid var(--border);
+    border-radius: 18px; padding: 36px 30px;
+    transition: box-shadow .28s ease, transform .28s ease;
+    position: relative; overflow: hidden;
+  }
+  .step-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(212, 165, 255, 0.08), rgba(124, 92, 235, 0.08));
+    opacity: 0; transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .step-card::after {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--dark), var(--accent-blue));
+    opacity: 0; transition: opacity 0.3s ease;
+  }
+  .step-card:hover {
+    box-shadow: 0 18px 48px rgba(124, 92, 235, 0.18), inset 0 0 28px rgba(212, 165, 255, 0.1);
+    transform: translateY(-6px);
+  }
+  .step-card:hover::before { opacity: 1; }
+  .step-card:hover::after { opacity: 1; }
+
+  .step-icon-wrap {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 22px;
+  }
+  .step-icon {
+    width: 44px; height: 44px; border-radius: 11px;
+    background: var(--badge-bg); display: flex; align-items: center;
+    justify-content: center; font-size: 20px;
+    transition: transform 0.2s ease;
+  }
+  .step-card:hover .step-icon { transform: scale(1.1) rotate(-3deg); }
+  .step-num { font-size: 13px; font-weight: 700; color: var(--muted); letter-spacing: .04em; }
+
+  .step-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700; color: var(--dark);
+    margin-bottom: 14px;
+  }
+
+  .step-desc { font-size: 14.5px; color: var(--muted); line-height: 1.74; }
+
+  /* ── INDUSTRIES PAGE ── */
+  #industries-page section { background: white; }
+
+  .serve-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;
+  }
+
+  .serve-card {
+    border: 1px solid var(--border); border-radius: 18px;
+    padding: 32px 28px; transition: box-shadow .28s ease, transform .28s ease;
+    background: white; position: relative; overflow: hidden;
+    cursor: default;
+  }
+  .serve-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(212, 165, 255, 0.06), rgba(124, 92, 235, 0.06));
+    opacity: 0; transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .serve-card::after {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--dark), var(--accent-blue));
+    opacity: 0; transition: opacity 0.3s ease;
+  }
+  .serve-card:hover {
+    box-shadow: 0 16px 44px rgba(124, 92, 235, 0.16);
+    transform: translateY(-5px);
+  }
+  .serve-card:hover::before { opacity: 1; }
+  .serve-card:hover::after { opacity: 1; }
+
+  .serve-icon {
+    width: 46px; height: 46px; border-radius: 11px;
+    background: var(--badge-bg); display: flex; align-items: center;
+    justify-content: center; font-size: 20px; margin-bottom: 20px;
+    transition: transform 0.22s ease;
+  }
+  .serve-card:hover .serve-icon { transform: scale(1.1); }
+
+  .serve-title {
+    font-size: 16.5px; font-weight: 700; color: var(--dark); margin-bottom: 9px;
+  }
+  .serve-desc { font-size: 14px; color: var(--muted); line-height: 1.68; }
+
+  /* ── TEAM PAGE ── */
+  #company-page section { background: #f9f7ff; }
+
+  .team-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;
+    max-width: 640px;
+    margin-bottom: 80px;
+  }
+
+  .team-card {
+    background: white; border: 1px solid var(--border);
+    border-radius: 18px; padding: 36px 32px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative; overflow: hidden;
+  }
+  .team-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--dark), var(--accent-blue), var(--accent-amber));
+    opacity: 0; transition: opacity 0.3s ease;
+  }
+  .team-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 18px 48px rgba(124,92,235,0.16);
+  }
+  .team-card:hover::before { opacity: 1; }
+
+  .team-role {
+    font-size: 11.5px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--accent-blue); margin-bottom: 10px;
+  }
+  .team-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700; color: var(--dark);
+  }
+
+  /* ── DEMO PAGE ── */
+  #demo-page section { background: #f0e6ff; }
+
+  .demo-inner {
+    display: grid; grid-template-columns: 1fr 1.4fr; gap: 64px;
+    align-items: start; max-width: 1100px; margin: 0 auto;
+  }
+
+  .demo-left .section-label { margin-bottom: 14px; }
+  .demo-left .section-title { max-width: 380px; margin-bottom: 20px; }
+  .demo-left .section-sub { margin-bottom: 30px; }
+
+  .demo-contact { display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; }
+  .demo-contact-item { display: flex; align-items: center; gap: 11px; font-size: 14px; color: var(--mid); }
+  .demo-contact-item .icon { font-size: 16px; }
+
+  .social-row { display: flex; gap: 11px; }
+  .social-btn {
+    width: 40px; height: 40px; border-radius: 10px; border: 1.5px solid var(--border);
+    background: white; display: flex; align-items: center; justify-content: center;
+    font-size: 15px; cursor: pointer; text-decoration: none; color: var(--mid);
+    transition: all .3s ease;
+  }
+  .social-btn:hover {
+    border-color: var(--accent-blue);
+    background: linear-gradient(135deg, rgba(124, 92, 235, 0.05), rgba(212, 165, 255, 0.05));
+    color: var(--accent-blue);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(124, 92, 235, 0.2);
+  }
+
+  .form-card {
+    background: white; border: 1.5px solid var(--border);
+    border-radius: 20px; padding: 38px 34px;
+    box-shadow: 0 10px 40px rgba(124, 92, 235, 0.16);
+    position: relative; overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .form-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(212, 165, 255, 0.04), rgba(124, 92, 235, 0.04));
+    pointer-events: none;
+  }
+  .form-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 52px rgba(124, 92, 235, 0.2);
+  }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+  .form-group { display: flex; flex-direction: column; gap: 7px; }
+  .form-group label { font-size: 13.5px; font-weight: 500; color: var(--dark); }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    border: 1.5px solid var(--border); border-radius: 10px;
+    padding: 11px 15px; font-size: 14px; font-family: 'DM Sans', sans-serif;
+    color: var(--dark); outline: none; background: white;
+    transition: all .3s ease;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(124, 92, 235, 0.12);
+    transform: translateY(-1px);
+  }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+
+  .form-consent { font-size: 12px; color: var(--muted); margin: 16px 0; }
+
+  .btn-submit {
+    width: 100%; padding: 14px; background: linear-gradient(135deg, var(--dark), var(--accent-blue));
+    color: white; border: none; border-radius: 11px; font-size: 15.5px;
+    font-family: 'DM Sans', sans-serif; font-weight: 600; cursor: pointer;
+    transition: all .3s; position: relative; overflow: hidden;
+  }
+  .btn-submit::before {
+    content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+    transition: left 0.6s;
+  }
+  .btn-submit:hover {
+    box-shadow: 0 12px 32px rgba(124, 92, 235, 0.42);
+    transform: translateY(-2px);
+  }
+  .btn-submit:hover::before { left: 100%; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #2d1b69; color: #c5b7d8;
+    padding: 48px; text-align: center;
+    font-size: 13.5px;
+  }
+  footer a { color: #e9dff7; text-decoration: none; transition: color 0.2s; }
+  footer a:hover { color: white; }
+
+  /* ── BACK TO TOP ── */
+  .back-to-top {
+    position: fixed; right: 22px; bottom: 22px;
+    width: 48px; height: 48px; border-radius: 14px;
+    background: linear-gradient(135deg, var(--dark), var(--accent-blue));
+    color: white; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 28px rgba(124, 92, 235, 0.38);
+    cursor: pointer; opacity: 0; visibility: hidden; border: none;
+    transition: opacity .28s ease, transform .28s ease, visibility .28s ease, box-shadow .28s ease;
+    z-index: 120; font-size: 20px; font-weight: bold;
+  }
+  .back-to-top.visible { opacity: 1; visibility: visible; }
+  .back-to-top:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 36px rgba(124, 92, 235, 0.52);
+  }
+
+  /* ── REVEAL ANIMATIONS ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity 0.58s ease-out, transform 0.58s ease-out;
+  }
+  .reveal-right { opacity: 0; transform: translateX(38px); transition: opacity 0.58s ease-out, transform 0.58s ease-out; }
+  .reveal-left { opacity: 0; transform: translateX(-38px); transition: opacity 0.58s ease-out, transform 0.58s ease-out; }
+  .reveal-zoom { opacity: 0; transform: scale(0.97); transition: opacity 0.58s ease-out, transform 0.58s ease-out; }
+  .visible { opacity: 1 !important; transform: none !important; }
+
+  /* ── KEYFRAMES ── */
+  @keyframes float-blob {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(18px, -28px) scale(1.08); }
+    50% { transform: translate(-16px, 16px) scale(0.94); }
+    75% { transform: translate(26px, 24px) scale(1.04); }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.65; transform: scale(1.08); }
+  }
+
+  @keyframes badge-shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  @keyframes slide-up {
+    from { transform: translateY(32px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  @keyframes drift {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(14px, -20px) scale(1.03); }
+    100% { transform: translate(0, 0) scale(1); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    section { padding: 80px 32px; }
+    .platform-inner { gap: 40px; }
+  }
+
+  @media (max-width: 900px) {
+    nav { padding: 0 22px; min-height: 88px; }
+    .nav-links { display: none; }
+    .hamburger-menu { display: flex; }
+    section { padding: 68px 22px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .platform-inner { grid-template-columns: 1fr; }
+    .steps-grid { grid-template-columns: 1fr; }
+    .serve-grid { grid-template-columns: repeat(2, 1fr); }
+    .team-grid { grid-template-columns: repeat(2, 1fr); }
+    .demo-inner { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .signal-cards { grid-template-columns: 1fr; }
+    .problem-grid { grid-template-columns: 1fr; }
+    .noise-pillars { grid-template-columns: 1fr; }
+    .problem-conclusion { padding: 32px 28px; }
+  }
+
+  @media (max-width: 640px) {
+    .nav-actions { display: none; }
+    .hero-title { font-size: clamp(34px, 8vw, 52px); }
+    .back-to-top { right: 14px; bottom: 14px; }
+    .serve-grid { grid-template-columns: 1fr; }
+    .team-grid { grid-template-columns: 1fr; max-width: 100%; }
+    nav { min-height: 72px; padding: 0 16px; }
+    .nav-logo { font-size: 18px; }
+    .hero-sub { font-size: 15.5px; }
+    .section-title { font-size: clamp(24px, 5vw, 36px); }
+    .noise-pillars { grid-template-columns: 1fr; }
+    .problem-grid { grid-template-columns: 1fr; }
+    section { padding: 48px 16px; }
+    .hero-badge { font-size: 12.5px; }
+    .hero-cta { flex-direction: column; align-items: center; }
+    .btn-lg { width: 100%; min-width: auto; }
+    .problem-conclusion { padding: 28px 18px; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { padding: 32px 16px; font-size: 12px; }
+    .stats-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 480px) {
+    nav { min-height: 68px; padding: 0 12px; }
+    .nav-logo { font-size: 16px; gap: 6px; }
+    .hamburger-menu { width: 36px; height: 36px; }
+    .hamburger-menu span { width: 22px; height: 2px; }
+    .mobile-nav { top: 68px; padding: 16px; }
+    .hero-title { font-size: clamp(28px, 6vw, 42px); line-height: 1.15; }
+    .hero-sub { font-size: 14.5px; margin-bottom: 28px; }
+    .hero-cta { gap: 10px; }
+    .btn-lg { padding: 12px 18px; font-size: 14px; }
+    .section-label { font-size: 10px; }
+    .section-title { font-size: clamp(20px, 5vw, 32px); }
+    .section-sub { font-size: 14px; margin-bottom: 32px; }
+    .stats-grid { grid-template-columns: 1fr; }
+    .step-card { padding: 24px 18px; }
+    .form-card { padding: 24px 18px; border-radius: 16px; }
+    .demo-left .section-title { max-width: 100%; }
+    .tags-row { gap: 8px; }
+    .tag { font-size: 12px; padding: 5px 12px; }
+    .mock-browser { border-radius: 12px; }
+    section { padding: 40px 12px; }
+    .back-to-top { width: 40px; height: 40px; right: 12px; bottom: 12px; font-size: 18px; }
+  }
+
+  @media (max-width: 768px) {
+    section { padding: 56px 18px; }
+    .demo-inner { gap: 32px; grid-template-columns: 1fr; }
+    .platform-inner { gap: 32px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+@media (max-width: 900px) {
+  nav {
+    justify-content: flex-start !important;
+    gap: 14px;
+    position: relative;
+  }
+
+  .hamburger-menu {
+    position: fixed;
+    top: 24px;
+    left: 22px;
+    margin-right: 6px;
+  }
+
+  .nav-logo {
+    margin-left: 60px;
+  }
+}
+
+@media (max-width: 640px) {
+  .hamburger-menu {
+    top: 16px;
+    left: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hamburger-menu {
+    top: 16px;
+    left: 12px;
+  }
+
+  .nav-logo {
+    margin-left: 56px;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav id="main-nav">
+  <a class="nav-logo" href="#" data-page="home">VrenceS Technologies</a>
+  <ul class="nav-links">
+    <li><a data-page="platform">Platform</a></li>
+    <li><a data-page="problem">Problem</a></li>
+    <li><a data-page="how">How It Works</a></li>
+    <li><a data-page="industries">Industries</a></li>
+    <li><a data-page="company">Company</a></li>
+    <li><a data-page="demo">Demo</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a class="btn-outline" href="#" data-page="demo">Request access</a>
+    <a class="btn-primary" href="#" data-page="demo">Book a demo →</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 1 — HOME / HERO
+═══════════════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+  <div id="hero-page">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-glow-left"></div>
+    <div class="hero-glow-right"></div>
+    <div class="hero-glow-center"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        AI-native compliance infrastructure · Now in private beta
+      </div>
+
+      <h1 class="hero-title">
+        AI-Powered <span class="colorful">Compliance Intelligence</span><br>
+        for Modern Financial Institutions
+      </h1>
+
+      <p class="hero-sub">
+        Reduce AML false positives, accelerate investigations, and empower compliance teams with explainable, intelligent risk analysis — built for banks, fintechs, and payment processors.
+      </p>
+
+      <div class="hero-cta">
+        <a class="btn-primary btn-lg" href="#" data-page="demo">Book a demo →</a>
+        <a class="btn-secondary-lg" href="#" data-page="demo">🔒 Request early access</a>
+      </div>
+
+      <div class="hero-trust">
+        <span>Explainable AI by design</span>
+        <span class="sep">·</span>
+        <span>Deploys in-VPC or SaaS</span>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 Vrences Technologies Ltd. · <a href="#">Privacy Policy</a> · <a href="#">Terms</a> · info@vrencestechnologies.com</p>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 2 — METRICS / NUMBERS
+═══════════════════════════════════════════════════ -->
+<div class="page" id="page-metrics">
+  <div id="metrics-page">
+    <section>
+      <div class="section-label reveal">Operational Impact</div>
+      <h2 class="section-title reveal">Results that redefine compliance operations.</h2>
+      <p class="section-sub reveal">Measurable outcomes across pilot deployments — fewer false alarms, faster decisions, and complete audit confidence.</p>
+
+      <div class="stats-grid reveal">
+        <div class="stat-card reveal">
+          <div class="stat-num">85%</div>
+          <div class="stat-label">Reduction in AML false positives</div>
+          <div class="stat-desc">Across pilot deployments at mid-size banks</div>
+        </div>
+        <div class="stat-card reveal">
+          <div class="stat-num">5×</div>
+          <div class="stat-label">Faster alert triage</div>
+          <div class="stat-desc">Median time from alert to disposition</div>
+        </div>
+        <div class="stat-card reveal">
+          <div class="stat-num">70%</div>
+          <div class="stat-label">Higher analyst productivity</div>
+          <div class="stat-desc">Cases closed per analyst, per week</div>
+        </div>
+        <div class="stat-card reveal">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Decision auditability</div>
+          <div class="stat-desc">Every score traced to an explainable signal</div>
+        </div>
+      </div>
+
+      <div class="tags-row reveal">
+        <span class="tag">AI-assisted alert prioritization</span>
+        <span class="tag">Entity &amp; network risk scoring</span>
+        <span class="tag">Behavior-driven investigation workflows</span>
+        <span class="tag">Continuous learning from analyst feedback</span>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>© 2026 Vrences Technologies Ltd. · <a href="#">Privacy Policy</a> · <a href="#">Terms</a> · info@vrencestechnologies.com</p>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 3 — NOISE REDUCTION
+═══════════════════════════════════════════════════ -->
+<div class="page" id="page-noise">
+  <div id="noise-page">
+    <section>
+      <div class="section-label reveal">Intelligence Layer</div>
+      <h2 class="noise-headline reveal">
+        Cut alert noise.<br>
+        Refocus compliance teams<br>
+        on <span class="hl">real risk.</span>
+      </h2>
+      <p class="noise-desc reveal">
+        Vrences augments your AML monitoring stack with an intelligent triage layer — so analysts stop chasing low-quality alerts and start closing meaningful cases faster. Every alert is scored, ranked, and explained.
+      </p>
+
+      <div class="noise-pillars">
+        <div class="noise-pillar reveal">
+          <div class="noise-pillar-icon">🎯</div>
+          <div class="noise-pillar-title">Dynamic Risk Prioritization</div>
+          <p>Alerts ranked by contextual risk signals in real time — not static threshold rules. High-risk cases rise to the top automatically.</p>
+        </div>
+        <div class="noise-pillar reveal">
+          <div class="noise-pillar-icon">🔍</div>
+          <div class="noise-pillar-title">Explainable Intelligence</div>
+          <p>Every prioritization decision comes with a traceable rationale. Regulators get transparency. Analysts get confidence. Teams get efficiency.</p>
+        </div>
+        <div class="noise-pillar reveal">
+          <div class="noise-pillar-icon">⚡</div>
+          <div class="noise-pillar-title">Accelerated Investigation</div>
+          <p>Pre-built investigation summaries, entity network views, and behavioral signals are delivered alongside each alert — eliminating manual research time.</p>
+        </div>
+      </div>
+
+      <div class="tags-row reveal">
+        <span class="tag">AI-assisted alert prioritization</span>
+        <span class="tag">Entity &amp; network risk scoring</span>
+        <span class="tag">Behavior-driven investigation workflows</span>
+        <span class="tag">Continuous learning from analyst feedback</span>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>© 2026 Vrences Technologies Ltd. · <a href="#">Privacy Policy</a> · <a href="#">Terms</a> · info@vrencestechnologies.com</p>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 4 — PLATFORM
+═══════════════════════════════════════════════════ -->
+<div class="page" id="page-platform">
+  <div id="platform-page">
+    <section>
+      <div class="platform-inner">
+        <div>
+          <div class="section-label reveal">The Platform</div>
+          <h2 class="section-title reveal">One intelligence layer for the modern compliance stack.</h2>
+          <p class="section-sub reveal">
+            Vrences sits alongside your existing AML systems and turns raw alerts into prioritized, explainable, action-ready intelligence.
+          </p>
+        </div>
+
+        <div class="mock-browser reveal-right">
+          <div class="mock-browser-bar">
+            <div class="browser-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="browser-url">vrences.app / investigations / queue</div>
+            <div class="browser-live">
+              <span class="live-dot"></span> Live · Model v2.4.1
+            </div>
+          </div>
+          <div class="mock-layout">
+            <div class="mock-sidebar">
+              <div class="sidebar-label">Workspaces</div>
+              <a class="sidebar-link active">Investigations</a>
+              <a class="sidebar-link">Entities</a>
+              <a class="sidebar-link">Cases</a>
+              <a class="sidebar-link">Rules</a>
+              <a class="sidebar-link">Reports</a>
+              <div class="sidebar-stats">
+                <div class="sidebar-stat-label">Today</div>
+                <div class="sidebar-stat-num">1,284</div>
+                <div style="font-size:11px;color:var(--muted);">Alerts processed</div>
+                <div class="sidebar-stat-badge">−71% false positives</div>
+              </div>
+            </div>
+            <div class="mock-main">
+              <div class="queue-header">
+                <div>
+                  <div class="queue-label">Prioritized queue</div>
+                  <div class="queue-title">5 high-signal alerts</div>
+                </div>
+                <div class="queue-meta">
+                  <span class="last-24">Last 24h</span>
+                  <span class="ai-badge">AI ranked</span>
+                </div>
+              </div>
+              <table class="alert-table">
+                <thead>
+                  <tr>
+                    <th>Alert</th>
+                    <th>Entity</th>
+                    <th>Risk</th>
+                    <th>Disposition</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>ALT-44219</td>
+                    <td>Northbridge Holdings Ltd.</td>
+                    <td>
+                      <div class="risk-bar">
+                        <div class="bar-track"><div class="bar-fill bar-high" style="width:92%"></div></div>
+                        <span class="risk-score">92</span>
+                      </div>
+                    </td>
+                    <td><span class="disp-badge disp-high">High</span></td>
+                  </tr>
+                  <tr>
+                    <td>ALT-44218</td>
+                    <td>C. Okafor</td>
+                    <td>
+                      <div class="risk-bar">
+                        <div class="bar-track"><div class="bar-fill bar-elevated" style="width:78%"></div></div>
+                        <span class="risk-score">78</span>
+                      </div>
+                    </td>
+                    <td><span class="disp-badge disp-elevated">Elevated</span></td>
+                  </tr>
+                  <tr>
+                    <td>ALT-44217</td>
+                    <td>Helios Payments S.A.</td>
+                    <td>
+                      <div class="risk-bar">
+                        <div class="bar-track"><div class="bar-fill bar-review" style="width:41%"></div></div>
+                        <span class="risk-score">41</span>
+                      </div>
+                    </td>
+                    <td><span class="disp-badge disp-review">Review</span></td>
+                  </tr>
+                  <tr>
+                    <td>ALT-44216</td>
+                    <td>M. Tanaka</td>
+                    <td>
+                      <div class="risk-bar">
+                        <div class="bar-track"><div class="bar-fill bar-low" style="width:18%"></div></div>
+                        <span class="risk-score">18</span>
+                      </div>
+                    </td>
+                    <td><span class="disp-badge disp-low">Low</span></td>
+                  </tr>
+                  <tr>
+                    <td>ALT-44215</td>
+                    <td>Pearl &amp; Co. Trust</td>
+                    <td>
+                      <div class="risk-bar">
+                        <div class="bar-track"><div class="bar-fill bar-low" style="width:12%"></div></div>
+                        <span class="risk-score">12</span>
+                      </div>
+                    </td>
+                    <td><span class="disp-badge disp-low">Low</span></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="signal-cards">
+                <div class="signal-card">
+                  <div class="signal-card-label">Behavior</div>
+                  <div class="signal-card-val">Atypical counterparty cluster</div>
+                </div>
+                <div class="signal-card">
+                  <div class="signal-card-label">Network</div>
+                  <div class="signal-card-val">Linked to 3 watch-listed entities</div>
+                </div>
+                <div class="signal-card">
+                  <div class="signal-card-label">Velocity</div>
+                  <div class="signal-card-val">9.2× baseline (last 7d)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>© 2026 Vrences Technologies Ltd. · <a href="#">Privacy Policy</a> · <a href="#">Terms</a> · info@vrencestechnologies.com</p>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 5 — PROBLEM
+═══════════════════════════════════════════════════ -->
+<div class="page" id="page-problem">
+  <div id="problem-page">
+    <section>
+      <div class="section-label reveal">The Problem</div>
+      <h2 class="section-title reveal">Compliance teams are drowning in noise while regulators demand explainable intelligence.</h2>
+
+      <p class="problem-intro reveal">
+        Financial institutions today are overwhelmed by an explosion of compliance alerts generated across AML monitoring, sanctions screening, transaction surveillance, and fraud detection systems. While these systems are designed to identify suspicious activity, the overwhelming majority of alerts generated are false positives — forcing compliance teams to spend significant time reviewing low-risk cases instead of focusing on genuine threats.
+      </p>
+      <p class="problem-intro reveal">
+        Legacy rule-based monitoring systems lack contextual intelligence and dynamic risk prioritization. As transaction volumes increase and regulatory expectations become stricter, compliance analysts are trapped in repetitive manual workflows that reduce operational efficiency and increase investigation fatigue.
+      </p>
+
+      <div class="problem-grid">
+        <div class="problem-card reveal">
+          <div class="problem-card-icon">⚠️</div>
+          <div class="problem-card-title">Excessive false positive alerts</div>
+          <p>High alert volumes consume analyst capacity, hiding real risk in operational noise and slowing investigation cycles.</p>
+        </div>
+        <div class="problem-card reveal">
+          <div class="problem-card-icon">🔴</div>
+          <div class="problem-card-title">Slow triage &amp; investigation cycles</div>
+          <p>Manual review workflows create bottlenecks that delay disposition and increase exposure to missed suspicious activity.</p>
+        </div>
+        <div class="problem-card reveal">
+          <div class="problem-card-icon">📊</div>
+          <div class="problem-card-title">Inconsistent risk prioritization</div>
+          <p>Without dynamic scoring, analyst judgment varies across cases — leading to uneven risk coverage and compliance gaps.</p>
+        </div>
+        <div class="problem-card reveal">
+          <div class="problem-card-icon">💸</div>
+          <div class="problem-card-title">Rising operational compliance costs</div>
+          <p>Headcount-driven compliance scaling is unsustainable as transaction volumes and regulatory demands continue to grow.</p>
+        </div>
+        <div class="problem-card reveal">
+          <div class="problem-card-icon">📋</div>
+          <div class="problem-card-title">Limited audit transparency</div>
+          <p>Black-box scoring systems cannot provide the explainable decision rationale regulators increasingly require.</p>
+        </div>
+        <div class="problem-card reveal">
+          <div class="problem-card-icon">🏛️</div>
+          <div class="problem-card-title">Regulatory penalty exposure</div>
+          <p>Increased scrutiny and enforcement action when compliance teams cannot demonstrate systematic, documented risk controls.</p>
+        </div>
+      </div>
+
+      <div class="problem-conclusion reveal">
+        <p class="problem-conclusion-text">
+          "Most compliance teams are not struggling because of a lack of data — they are struggling because they cannot efficiently identify which risks matter most in real time."
+        </p>
+        <p class="problem-conclusion-sub">
+          Vrences Technologies addresses this challenge through an AI-powered Compliance Intelligence Layer that reduces alert noise, prioritizes high-risk cases dynamically, and enables compliance teams to focus on real financial crime risk instead of operational overload.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>© 2026 Vrences Technologies Ltd. · <a href="#">Privacy Policy</a> · <a href="#">Terms</a> · info@vrencestechnologies.com</p>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 6 — HOW IT WORKS
+═══════════════════════════════════════════════════ -->
+<div class="page" id="page-how">
+  <div id="how-page">
+    <section>
+      <div class="section-label reveal">How It Works</div>
+      <h2 class="section-title reveal">From alert to insight in three steps.</h2>
+      <p class="section-sub reveal">A seamless intelligence layer that plugs into your existing stack — no workflow disruption, no rip-and-replace.</p>
+
+      <div class="steps-grid">
+        <div class="step-card reveal">
+          <div class="step-icon-wrap">
+            <div class="step-icon">🔌</div>
+            <span class="step-num">01</span>
+          </div>
+          <div class="step-title">Integrate AML alerts</div>
+          <p class="step-desc">Connect via API, Kafka, or batch — Vrences ingests alerts from Actimize, SAS, Hummingbird, and in-house systems with zero workflow disruption.</p>
+        </div>
+        <div class="step-card reveal">
+          <div class="step-icon-wrap">
+            <div class="step-icon">⚙️</div>
+            <span class="step-num">02</span>
+          </div>
+          <div class="step-title">AI analyzes behavior &amp; risk signals</div>
+          <p class="step-desc">Models evaluate transaction patterns, network topology, entity attributes, and historical analyst decisions to produce a calibrated risk score.</p>
+        </div>
+        <div class="step-card reveal">
+          <div class="step-icon-wrap">
+            <div class="step-icon">✦</div>
+            <span class="step-num">03</span>
+          </div>
+          <div class="step-title">Analysts receive prioritized insights</div>
+          <p class="step-desc">Ranked queues, recommended dispositions, and explainable rationale — delivered into your case management tool or the Vrences console.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>© 2026 Vrences Technologies Ltd. · <a href="#">Privacy Policy</a> · <a href="#">Terms</a> · info@vrencestechnologies.com</p>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 7 — INDUSTRIES
+═══════════════════════════════════════════════════ -->
+<div class="page" id="page-industries">
+  <div id="industries-page">
+    <section>
+      <div class="section-label reveal">Who We Serve</div>
+      <h2 class="section-title reveal">Built for the institutions defining modern finance.</h2>
+      <p class="section-sub reveal">From global banks to neobank challengers — Vrences scales to the compliance complexity of every regulated institution.</p>
+
+      <div class="serve-grid">
+        <div class="serve-card reveal">
+          <div class="serve-icon">🏛️</div>
+          <div class="serve-title">Banks</div>
+          <p class="serve-desc">Tier 1 and regional banks reducing transaction-monitoring overhead.</p>
+        </div>
+        <div class="serve-card reveal">
+          <div class="serve-icon">💳</div>
+          <div class="serve-title">Fintech companies</div>
+          <p class="serve-desc">Embedded-finance and lending platforms scaling compliance with growth.</p>
+        </div>
+        <div class="serve-card reveal">
+          <div class="serve-icon">₿</div>
+          <div class="serve-title">Crypto exchanges</div>
+          <p class="serve-desc">On-chain and off-chain signals unified for travel-rule and AML obligations.</p>
+        </div>
+        <div class="serve-card reveal">
+          <div class="serve-icon">🖥️</div>
+          <div class="serve-title">Payment processors</div>
+          <p class="serve-desc">High-throughput screening across cards, ACH, and real-time rails.</p>
+        </div>
+        <div class="serve-card reveal">
+          <div class="serve-icon">🏦</div>
+          <div class="serve-title">NBFCs</div>
+          <p class="serve-desc">Risk intelligence sized for non-bank financial institutions and lenders.</p>
+        </div>
+        <div class="serve-card reveal">
+          <div class="serve-icon">📱</div>
+          <div class="serve-title">Digital banking platforms</div>
+          <p class="serve-desc">Neobanks and challenger banks operating with lean compliance teams.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>© 2026 Vrences Technologies Ltd. · <a href="#">Privacy Policy</a> · <a href="#">Terms</a> · info@vrencestechnologies.com</p>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 8 — COMPANY / TEAM
+═══════════════════════════════════════════════════ -->
+<div class="page" id="page-company">
+  <div id="company-page">
+    <section>
+      <div class="section-label reveal">Our Team</div>
+      <h2 class="section-title reveal">Built by professionals for professionals.</h2>
+      <p class="section-sub reveal">Vrences was founded by professionals with deep expertise at the intersection of financial compliance and applied AI.</p>
+
+      <div class="team-grid">
+        <div class="team-card reveal">
+          <div class="team-role">Co-Founder</div>
+          <div class="team-name">S. SUBINAV</div>
+        </div>
+        <div class="team-card reveal">
+          <div class="team-role">Co-Founder</div>
+          <div class="team-name">E. Viswanathan Harri</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>© 2026 Vrences Technologies Ltd. · <a href="#">Privacy Policy</a> · <a href="#">Terms</a> · info@vrencestechnologies.com</p>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 9 — DEMO
+═══════════════════════════════════════════════════ -->
+<div class="page" id="page-demo">
+  <div id="demo-page">
+    <section>
+      <div class="demo-inner">
+        <div class="demo-left">
+          <div class="section-label reveal">Book a Demo</div>
+          <h2 class="section-title reveal">See Vrences against your own alert data.</h2>
+          <p class="section-sub reveal">Tell us a bit about your team and AML stack. We'll set up a 30-minute walkthrough, share architecture options, and discuss a pilot tailored to your environment.</p>
+
+          <div class="demo-contact reveal">
+            <div class="demo-contact-item">
+              <span class="icon">✉️</span>
+              <span>info@vrencestechnologies.com</span>
+            </div>
+          </div>
+
+          <div class="social-row reveal">
+            <a class="social-btn" href="https://www.linkedin.com/company/vrences-technologies/?lipi=urn%3Ali%3Apage%3Ad_flagship3_company%3Bvw518d4XT%2BWqgJQ%2Bcd7pNA%3D%3D" title="LinkedIn" target="_blank" rel="noopener noreferrer">in</a>
+            <a class="social-btn" href="#" title="Twitter">𝕏</a>
+            <a class="social-btn" href="#" title="GitHub">⌥</a>
+          </div>
+        </div>
+
+        <form class="form-card reveal" id="demo-form" action="https://formspree.io/f/mreddzqp" method="POST">
+          <div id="form-success" style="display:none; padding:20px; background:rgba(34,197,94,0.08); border:1.5px solid #22c55e; border-radius:12px; margin-bottom:20px; text-align:center;">
+            <div style="color:#22c55e; font-weight:600; font-size:15px; margin-bottom:8px;">✓ Success!</div>
+            <div style="color:var(--mid); font-size:14px;">Thanks for your interest. We'll be in touch shortly.</div>
+          </div>
+          <div id="form-content">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="fname">Full name</label>
+                <input id="fname" type="text" name="full_name" placeholder="" required />
+              </div>
+              <div class="form-group">
+                <label for="company">Company name</label>
+                <input id="company" type="text" name="company" placeholder="" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="email">Work email</label>
+                <input id="email" type="email" name="email" placeholder="" required />
+              </div>
+              <div class="form-group">
+                <label for="jobtitle">Job title</label>
+                <input id="jobtitle" type="text" name="job_title" placeholder="" />
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:16px;">
+              <label for="size">Company size</label>
+              <select id="size" name="company_size">
+                <option value="">Select...</option>
+                <option>1–50</option>
+                <option>51–250</option>
+                <option>251–1,000</option>
+                <option>1,000+</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom:16px;">
+              <label for="message">Message (optional)</label>
+              <textarea id="message" name="message" placeholder="Tell us about your current AML stack, alert volume, or what you'd like to see in the demo."></textarea>
+            </div>
+            <p class="form-consent">By submitting, you agree to be contacted by Vrences Technologies.</p>
+            <button class="btn-submit" type="submit">Schedule a demo</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>© 2026 Vrences Technologies Ltd. · <a href="#">Privacy Policy</a> · <a href="#">Terms</a> · info@vrencestechnologies.com</p>
+  </footer>
+</div>
+
+<!-- ─── BACK TO TOP ─── -->
+<button class="hamburger-menu" id="hamburger" aria-label="Toggle navigation menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <nav class="mobile-nav" id="mobile-nav">
+    <a data-page="platform">Platform</a>
+    <a data-page="problem">Problem</a>
+    <a data-page="how">How It Works</a>
+    <a data-page="industries">Industries</a>
+    <a data-page="company">Company</a>
+    <a data-page="demo">Demo</a>
+  </nav>
+
+<button class="back-to-top" type="button" id="back-to-top" aria-label="Back to top">↑</button>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   ROUTING ENGINE
+═══════════════════════════════════════════════════ */
+const PAGE_MAP = {
+  'home': 'page-home',
+  'metrics': 'page-metrics',
+  'noise': 'page-noise',
+  'platform': 'page-platform',
+  'problem': 'page-problem',
+  'how': 'page-how',
+  'industries': 'page-industries',
+  'company': 'page-company',
+  'demo': 'page-demo',
+};
+
+/* ═══════════════════════════════════════════════════
+   MOBILE MENU HANDLER
+═══════════════════════════════════════════════════ */
+const hamburger = document.getElementById('hamburger');
+const mobileNav = document.getElementById('mobile-nav');
+
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('active');
+  mobileNav.classList.toggle('active');
+});
+
+mobileNav.addEventListener('click', (e) => {
+  if (e.target.dataset.page) {
+    hamburger.classList.remove('active');
+    mobileNav.classList.remove('active');
+  }
+});
+
+// Close menu on window resize to desktop
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 900) {
+    hamburger.classList.remove('active');
+    mobileNav.classList.remove('active');
+  }
+});
+
+let currentPage = 'home';
+
+function navigateTo(pageKey, pushState = true) {
+  if (!PAGE_MAP[pageKey]) pageKey = 'home';
+  if (pageKey === currentPage) return;
+
+  const outgoing = document.getElementById(PAGE_MAP[currentPage]);
+  const incoming = document.getElementById(PAGE_MAP[pageKey]);
+
+  // Mark outgoing as leaving
+  outgoing.classList.add('leaving');
+
+  setTimeout(() => {
+    outgoing.classList.remove('active', 'leaving');
+    outgoing.style.display = 'none';
+
+    // Reset scroll
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
+    // Show incoming
+    incoming.style.display = 'block';
+    // force reflow
+    incoming.offsetHeight;
+    incoming.classList.add('active');
+
+    currentPage = pageKey;
+
+    // Update nav active state
+    updateNavActive(pageKey);
+
+    // Trigger reveals on this page
+    triggerReveal(incoming);
+
+    // Re-run hero canvas if on home
+    if (pageKey === 'home') {
+      setTimeout(initHeroCanvas, 50);
+    }
+
+    if (pushState) {
+      history.pushState({ page: pageKey }, '', '#/' + (pageKey === 'home' ? '' : pageKey));
+    }
+  }, 200);
+}
+
+function updateNavActive(pageKey) {
+  document.querySelectorAll('.nav-links a[data-page]').forEach(a => {
+    a.classList.toggle('active', a.dataset.page === pageKey);
+  });
+  document.querySelectorAll('.mobile-nav a[data-page]').forEach(a => {
+    a.classList.toggle('active', a.dataset.page === pageKey);
+  });
+}
+
+// Handle all navigation clicks
+document.addEventListener('click', function(e) {
+  const link = e.target.closest('[data-page]');
+  if (!link) return;
+  // Skip if it's the hamburger button itself
+  if (link === hamburger) return;
+  e.preventDefault();
+  const page = link.dataset.page;
+  if (page) navigateTo(page);
+});
+
+// Handle browser back/forward
+window.addEventListener('popstate', function(e) {
+  const page = (e.state && e.state.page) ? e.state.page : 'home';
+  navigateTo(page, false);
+});
+
+// Initial hash routing
+(function() {
+  const hash = window.location.hash;
+  if (hash.startsWith('#/')) {
+    const key = hash.slice(2) || 'home';
+    if (PAGE_MAP[key]) {
+      currentPage = 'home'; // will navigate from home
+      navigateTo(key, false);
+    }
+  }
+})();
+
+/* ═══════════════════════════════════════════════════
+   REVEAL ON SCROLL
+═══════════════════════════════════════════════════ */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) return;
+    entry.target.classList.add('visible');
+    revealObserver.unobserve(entry.target);
+  });
+}, { threshold: 0.14 });
+
+function triggerReveal(container) {
+  const els = container.querySelectorAll('.reveal, .reveal-right, .reveal-left, .reveal-zoom');
+  els.forEach((el, i) => {
+    // Reset first
+    el.classList.remove('visible');
+    el.style.transitionDelay = `${i * 0.055}s`;
+    revealObserver.observe(el);
+  });
+}
+
+// Trigger reveals on all currently active/visible pages on load
+document.querySelectorAll('.page.active').forEach(triggerReveal);
+
+/* ═══════════════════════════════════════════════════
+   NAV SCROLL BEHAVIOR
+═══════════════════════════════════════════════════ */
+const nav = document.getElementById('main-nav');
+const backToTop = document.getElementById('back-to-top');
+
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  nav.classList.toggle('scrolled', y > 20);
+  backToTop.classList.toggle('visible', y > 380);
+}, { passive: true });
+
+backToTop.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+/* ═══════════════════════════════════════════════════
+   HERO CANVAS ANIMATION
+   Elegant floating nodes + soft connecting lines
+═══════════════════════════════════════════════════ */
+function initHeroCanvas() {
+  const canvas = document.getElementById('hero-canvas');
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  let W, H, nodes;
+  let animId;
+
+  function resize() {
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+
+  function createNodes(count) {
+    return Array.from({ length: count }, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: 1.8 + Math.random() * 2.2,
+      vx: (Math.random() - 0.5) * 0.28,
+      vy: (Math.random() - 0.5) * 0.28,
+      opacity: 0.25 + Math.random() * 0.45,
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.006 + Math.random() * 0.008,
+      // Color: lavender/purple palette
+      hue: 260 + Math.random() * 50,
+    }));
+  }
+
+  function init() {
+    resize();
+    nodes = createNodes(42);
+  }
+
+  const CONNECTION_DIST = 140;
+  const MAX_CONNECTIONS = 3;
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    const t = performance.now() * 0.001;
+
+    // Update nodes
+    nodes.forEach(n => {
+      n.x += n.vx + Math.sin(t * n.speed + n.phase) * 0.18;
+      n.y += n.vy + Math.cos(t * n.speed + n.phase) * 0.14;
+      // Wrap around edges
+      if (n.x < -20) n.x = W + 20;
+      if (n.x > W + 20) n.x = -20;
+      if (n.y < -20) n.y = H + 20;
+      if (n.y > H + 20) n.y = -20;
+    });
+
+    // Draw connections
+    for (let i = 0; i < nodes.length; i++) {
+      let connections = 0;
+      for (let j = i + 1; j < nodes.length && connections < MAX_CONNECTIONS; j++) {
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < CONNECTION_DIST) {
+          const alpha = (1 - dist / CONNECTION_DIST) * 0.14;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.strokeStyle = `hsla(270, 60%, 70%, ${alpha})`;
+          ctx.lineWidth = 0.7;
+          ctx.stroke();
+          connections++;
+        }
+      }
+    }
+
+    // Draw nodes
+    nodes.forEach(n => {
+      const pulse = 0.8 + 0.2 * Math.sin(t * 1.4 + n.phase);
+      const r = n.r * pulse;
+      const alpha = n.opacity * (0.7 + 0.3 * Math.sin(t * 0.8 + n.phase));
+
+      // Soft glow
+      const grd = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r * 5);
+      grd.addColorStop(0, `hsla(${n.hue}, 65%, 72%, ${alpha * 0.35})`);
+      grd.addColorStop(1, `hsla(${n.hue}, 65%, 72%, 0)`);
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, r * 5, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+
+      // Core dot
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${n.hue}, 60%, 75%, ${alpha})`;
+      ctx.fill();
+    });
+
+    animId = requestAnimationFrame(draw);
+  }
+
+  // Clean up if re-init
+  if (canvas._animId) cancelAnimationFrame(canvas._animId);
+
+  init();
+  draw();
+  canvas._animId = animId;
+
+  window.addEventListener('resize', () => {
+    resize();
+    nodes = createNodes(42);
+  }, { passive: true });
+}
+
+// Initialize canvas
+document.addEventListener('DOMContentLoaded', initHeroCanvas);
+initHeroCanvas();
+
+/* ═══════════════════════════════════════════════════
+   FORM SUBMIT
+═══════════════════════════════════════════════════ */
+document.getElementById('demo-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const form = this;
+  const formContent = document.getElementById('form-content');
+  const formSuccess = document.getElementById('form-success');
+  
+  // Collect form data
+  const formData = new FormData(form);
+  
+  // Submit to Formspree
+  fetch(form.action, {
+    method: 'POST',
+    body: formData,
+    headers: {
+      'Accept': 'application/json'
+    }
+  })
+  .then(response => {
+    if (response.ok) {
+      // Hide form content
+      formContent.style.display = 'none';
+      // Show success message
+      formSuccess.style.display = 'block';
+      
+      // Optional: Reset form for potential re-use
+      form.reset();
+      
+      // Optional: Auto-hide success message after 8 seconds and reset form
+      setTimeout(() => {
+        formSuccess.style.display = 'none';
+        formContent.style.display = 'block';
+      }, 8000);
+    } else {
+      alert('There was an error submitting the form. Please try again.');
+    }
+  })
+  .catch(error => {
+    alert('There was an error submitting the form. Please try again.');
+  });
+});
+
+/* ═══════════════════════════════════════════════════
+   PARALLAX (subtle, hero only)
+═══════════════════════════════════════════════════ */
+window.addEventListener('scroll', () => {
+  if (currentPage !== 'home') return;
+  const y = window.scrollY;
+  const heroContent = document.querySelector('.hero-content');
+  if (heroContent) {
+    heroContent.style.transform = `translateY(${y * 0.22}px)`;
+  }
+}, { passive: true });
+</script>
+
+</body>
+</html>
