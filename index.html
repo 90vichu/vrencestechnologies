@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VrenceS Technologies — Compliance Intelligence Platform</title>
+<meta name="description" content="CIP — AI-powered compliance investigation for Indian financial institutions. Screen against sanctions, PEPs, and adverse media. Catch false positives. Regulator-ready reports in moments.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F8FAFF;
+  --bg-soft:#EEF2FF;
+  --panel:#FFFFFF;
+  --panel-2:#F4F6FF;
+  --ice:#DDE7FF;
+  --lav:#EDE9FE;
+  --violet:#C4B5FD;
+  --indigo:#6366F1;
+  --indigo-soft:#818CF8;
+  --line:rgba(99,102,241,0.12);
+  --line-strong:rgba(99,102,241,0.22);
+  --text:#171a2b;
+  --text-dim:#565a72;
+  --text-faint:#9094ad;
+  --accent:#4f6bff;
+  --accent-2:#8b5cf6;
+  --green:#10b981;
+  --amber:#d97706;
+  --red:#e23b5a;
+  --critical:#e23b5a;
+  --serif:'Space Grotesk',sans-serif;
+  --sans:'Inter',-apple-system,sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --r:16px;
+  --r-lg:24px;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --shadow-sm:0 2px 8px rgba(80,90,160,0.06);
+  --shadow:0 14px 40px rgba(80,90,160,0.10);
+  --shadow-lg:0 30px 80px rgba(80,90,160,0.16);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+button,a,.feat,.agent,.ind,.sol,.glass,.results-row,.tcard,.menu-toggle,[data-nav],.sl{cursor:pointer}
+::selection{background:rgba(99,102,241,0.18);color:var(--text)}
+img{max-width:100%}
+
+
+/* ---------- Ambient background ---------- */
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;will-change:transform}
+.orb.o1{width:560px;height:560px;background:radial-gradient(circle,#C4B5FD,transparent 70%);top:-160px;left:-120px;animation:drift1 26s ease-in-out infinite}
+.orb.o2{width:480px;height:480px;background:radial-gradient(circle,#DDE7FF,transparent 70%);top:30%;right:-140px;animation:drift2 30s ease-in-out infinite}
+.orb.o3{width:420px;height:420px;background:radial-gradient(circle,#EDE9FE,transparent 70%);bottom:-120px;left:25%;animation:drift3 34s ease-in-out infinite}
+@keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(80px,60px)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-70px,90px)}}
+@keyframes drift3{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,-70px)}}
+
+/* scroll progress */
+#progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:9000;background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+
+/* ---------- Nav ---------- */
+nav{position:fixed;top:0;left:0;right:0;z-index:8000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 48px;transition:all .4s var(--ease);border-bottom:1px solid transparent;}
+nav.scrolled{background:rgba(248,250,255,.7);backdrop-filter:blur(22px) saturate(160%);border-bottom:1px solid var(--line);padding:14px 48px;}
+.brand{font-family:var(--serif);font-weight:700;font-size:21px;letter-spacing:-.03em;color:var(--text)}
+.brand b{font-weight:700}
+.nav-links{display:flex;gap:4px;align-items:center}
+.nav-links a{font-size:14px;color:var(--text-dim);padding:9px 16px;border-radius:10px;transition:all .25s;font-weight:500;position:relative}
+.nav-links a:hover{color:var(--text);background:rgba(99,102,241,.06)}
+.nav-links a.active{color:var(--indigo);background:rgba(99,102,241,.09)}
+.nav-cta{display:flex;align-items:center;gap:12px}
+.btn{position:relative;font-size:14px;font-weight:600;padding:11px 22px;border-radius:12px;border:none;transition:all .3s var(--ease);overflow:hidden}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;box-shadow:0 6px 20px rgba(99,102,241,.28)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(99,102,241,.4)}
+.btn-ghost{background:var(--panel);color:var(--text);border:1px solid var(--line-strong);box-shadow:var(--shadow-sm)}
+.btn-ghost:hover{background:var(--panel-2);border-color:var(--indigo-soft);transform:translateY(-2px)}
+.btn-glow{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;box-shadow:0 6px 20px rgba(99,102,241,.28)}
+.btn-glow:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(99,102,241,.4)}
+.menu-toggle{display:none;background:none;border:none;flex-direction:column;gap:5px}
+.menu-toggle span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:all .3s}
+
+/* ---------- Page system ---------- */
+.page{display:none;animation:pageIn .7s var(--ease)}
+.page.active{display:block}
+@keyframes pageIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+section{position:relative;z-index:2}
+.wrap{max-width:1240px;margin:0 auto;padding:0 48px}
+.wrap-wide{max-width:1560px;margin:0 auto;padding:0 56px}
+
+/* ---------- Hero (asymmetric two-column) ---------- */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:120px 0 60px}
+.hero-inner{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;align-items:center;width:100%}
+@media(max-width:1040px){.hero-inner{grid-template-columns:1fr;gap:48px}}
+.hero-content{max-width:680px}
+.tagline{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--indigo);
+  border:1px solid var(--line);background:var(--panel);padding:8px 16px;border-radius:100px;margin-bottom:28px;box-shadow:var(--shadow-sm)}
+.tagline .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero h1{font-family:var(--serif);font-size:clamp(38px,5vw,68px);line-height:1.05;letter-spacing:-.035em;font-weight:700;margin-bottom:26px}
+.hero h1 .grad{background:linear-gradient(120deg,var(--accent) 10%,var(--accent-2) 90%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero p.sub{font-size:clamp(16px,1.4vw,20px);color:var(--text-dim);max-width:560px;margin-bottom:38px;font-weight:400}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
+.btn-lg{padding:15px 30px;font-size:15px;border-radius:14px}
+.hero-stats{display:flex;gap:44px;margin-top:60px;flex-wrap:wrap}
+.hstat .num{font-family:var(--serif);font-size:32px;font-weight:700;letter-spacing:-.02em;background:linear-gradient(120deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hstat .lbl{font-size:13px;color:var(--text-faint);margin-top:2px}
+
+/* hero visual */
+.hero-visual{position:relative}
+.hv-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-lg);overflow:hidden;position:relative}
+.hv-bar{display:flex;align-items:center;gap:8px;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--panel-2)}
+.hv-bar .dots{display:flex;gap:6px}
+.hv-bar .dots i{width:10px;height:10px;border-radius:50%}
+.hv-bar .dots i:nth-child(1){background:#ff5f57}.hv-bar .dots i:nth-child(2){background:#febc2e}.hv-bar .dots i:nth-child(3){background:#28c840}
+.hv-bar .lbl{margin-left:8px;font-family:var(--mono);font-size:11px;color:var(--text-faint)}
+.hv-body{padding:24px}
+.hv-net{height:170px;border-radius:14px;background:linear-gradient(160deg,var(--bg-soft),var(--lav));border:1px solid var(--line);position:relative;overflow:hidden;margin-bottom:18px}
+#hero-net{width:100%;height:100%;display:block}
+.hv-rows{display:flex;flex-direction:column;gap:9px}
+.hv-row{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:11px;background:var(--panel-2);border:1px solid var(--line)}
+.hv-row .agname{flex:1;font-size:13px;font-weight:500}
+.hv-row .agstat{font-family:var(--mono);font-size:11px;display:flex;align-items:center;gap:6px;color:var(--green)}
+.hv-row .agstat .d{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}
+.hv-float{position:absolute;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:14px;padding:14px 18px;animation:float 6s ease-in-out infinite}
+.hv-float .ft{font-family:var(--mono);font-size:10px;color:var(--text-faint);letter-spacing:.08em;text-transform:uppercase}
+.hv-float .fv{font-family:var(--serif);font-weight:700;font-size:18px;margin-top:3px}
+.hv-float.f1{top:-26px;right:-22px}
+.hv-float.f2{bottom:-26px;left:-26px;animation-delay:2s}
+@media(max-width:520px){.hv-float{display:none}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+.reveal{opacity:0;transform:translateY(34px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- Section headers ---------- */
+.sec{padding:120px 0}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--indigo);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--indigo)}
+.sec h2{font-family:var(--serif);font-size:clamp(30px,4vw,48px);line-height:1.1;letter-spacing:-.025em;font-weight:700;margin-bottom:20px;max-width:760px}
+.sec .lead{font-size:18px;color:var(--text-dim);max-width:620px;font-weight:400}
+
+/* ---------- Trust ---------- */
+.trust{padding:52px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.trust-label{text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-faint);margin-bottom:28px}
+.trust-row{display:flex;justify-content:center;gap:50px;flex-wrap:wrap;align-items:center}
+.trust-item{font-family:var(--serif);font-weight:600;font-size:17px;color:var(--text-faint);letter-spacing:-.01em;transition:color .3s}
+.trust-item:hover{color:var(--indigo)}
+
+/* ---------- glass + cards ---------- */
+.glass{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:34px;position:relative;overflow:hidden;transition:all .4s var(--ease);box-shadow:var(--shadow-sm)}
+.glass:hover{border-color:var(--line-strong);transform:translateY(-5px);box-shadow:var(--shadow)}
+.glass::before{content:"";position:absolute;inset:0;background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),rgba(99,102,241,.07),transparent 42%);opacity:0;transition:opacity .3s}
+.glass:hover::before{opacity:1}
+
+/* ---------- Problem (asymmetric) ---------- */
+.problem-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;margin-top:56px}
+@media(max-width:860px){.problem-grid{grid-template-columns:1fr}}
+.problem-big{font-family:var(--serif);font-size:64px;font-weight:700;letter-spacing:-.03em;background:linear-gradient(120deg,var(--red),var(--amber));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.problem-card h3{font-family:var(--serif);font-size:22px;font-weight:600;margin:14px 0 10px}
+.problem-card p{color:var(--text-dim);font-size:15px}
+.problem-statement{grid-column:1/-1;margin-top:0;padding:34px 38px;border-radius:var(--r-lg);border:1px solid rgba(226,59,90,.18);background:linear-gradient(160deg,rgba(226,59,90,.05),var(--panel))}
+.problem-statement .k{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
+.problem-statement p{font-family:var(--serif);font-size:24px;font-weight:500;line-height:1.4}
+
+/* ---------- Features (asymmetric rhythm) ---------- */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:56px}
+@media(max-width:900px){.feat-grid{grid-template-columns:1fr}}
+.feat{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:34px;transition:all .4s var(--ease);position:relative;overflow:hidden;box-shadow:var(--shadow-sm)}
+.feat:hover{transform:translateY(-7px);border-color:var(--line-strong);box-shadow:var(--shadow)}
+.feat:nth-child(2){margin-top:28px}
+@media(max-width:900px){.feat:nth-child(2){margin-top:0}}
+.feat-ico{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;background:linear-gradient(135deg,var(--lav),var(--ice));border:1px solid var(--line)}
+.feat-ico svg{width:24px;height:24px;stroke:var(--indigo)}
+.feat h3{font-family:var(--serif);font-size:20px;font-weight:600;margin-bottom:10px}
+.feat p{color:var(--text-dim);font-size:15px}
+
+/* ---------- Agents ---------- */
+.agents{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:48px}
+@media(max-width:980px){.agents{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.agents{grid-template-columns:1fr}}
+.agent{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:26px;position:relative;transition:all .4s var(--ease);box-shadow:var(--shadow-sm)}
+.agent:hover{transform:translateY(-6px);border-color:var(--indigo-soft);box-shadow:var(--shadow)}
+.agent .tag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--indigo);text-transform:uppercase}
+.agent h4{font-family:var(--serif);font-size:18px;font-weight:600;margin:8px 0 12px}
+.agent p{font-size:14px;color:var(--text-dim);margin-bottom:16px}
+.agent .src{font-family:var(--mono);font-size:11px;color:var(--text-faint);padding-top:14px;border-top:1px solid var(--line)}
+.agent-pulse{position:absolute;top:22px;right:22px;width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);animation:pulse 1.8s infinite}
+
+/* pipeline */
+.pipeline{margin-top:60px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:40px;box-shadow:var(--shadow-sm)}
+.pipeline-flow{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.pnode{flex:1;min-width:130px;text-align:center;padding:22px 14px;border-radius:14px;background:var(--panel-2);border:1px solid var(--line)}
+.pnode .pi{font-family:var(--mono);font-size:10px;color:var(--indigo);letter-spacing:.1em;text-transform:uppercase}
+.pnode .pt{font-family:var(--serif);font-weight:600;font-size:15px;margin-top:6px}
+.pnode .pd{font-size:12px;color:var(--text-faint);margin-top:5px}
+.parrow{color:var(--indigo-soft);font-size:22px;flex:0 0 auto}
+@media(max-width:780px){.parrow{transform:rotate(90deg)}}
+
+/* ---------- Results ---------- */
+.results{margin-top:56px;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;background:var(--panel);box-shadow:var(--shadow-sm)}
+.results-head{display:grid;grid-template-columns:1.6fr .9fr .7fr 2fr;padding:18px 28px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-faint);background:var(--panel-2)}
+.results-row{display:grid;grid-template-columns:1.6fr .9fr .7fr 2fr;padding:22px 28px;border-bottom:1px solid var(--line);align-items:center;transition:background .3s}
+.results-row:last-child{border-bottom:none}
+.results-row:hover{background:var(--panel-2)}
+.rcase{font-weight:600}
+.rcase small{display:block;font-family:var(--mono);font-size:11px;color:var(--text-faint);font-weight:400;margin-top:2px}
+.badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;font-weight:500;padding:5px 11px;border-radius:7px;letter-spacing:.03em}
+.badge .dt{width:6px;height:6px;border-radius:50%;background:currentColor}
+.b-critical{background:rgba(226,59,90,.1);color:var(--critical);border:1px solid rgba(226,59,90,.22)}
+.b-medium{background:rgba(217,119,6,.1);color:var(--amber);border:1px solid rgba(217,119,6,.22)}
+.b-low{background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.22)}
+.rscore{font-family:var(--serif);font-weight:700;font-size:22px}
+.rwhat{font-size:13px;color:var(--text-dim)}
+@media(max-width:780px){.results-head{display:none}.results-row{grid-template-columns:1fr;gap:10px;padding:22px}}
+
+/* spotlight */
+.spotlight{margin-top:36px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow-sm);background:var(--panel)}
+@media(max-width:820px){.spotlight{grid-template-columns:1fr}}
+.spot-bad,.spot-good{padding:40px}
+.spot-bad{background:linear-gradient(160deg,rgba(226,59,90,.05),var(--panel));border-right:1px solid var(--line)}
+.spot-good{background:linear-gradient(160deg,rgba(16,185,129,.05),var(--panel))}
+.spot-bad .k,.spot-good .k{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px}
+.spot-bad .k{color:var(--red)}.spot-good .k{color:var(--green)}
+.spot-bad h4,.spot-good h4{font-family:var(--serif);font-size:22px;font-weight:600;margin-bottom:12px}
+.spot-bad p,.spot-good p{font-size:15px;color:var(--text-dim)}
+.dob-compare{display:flex;gap:18px;margin-top:20px;font-family:var(--mono);font-size:13px;color:var(--text-dim)}
+.dob-compare div{flex:1;padding:16px;border-radius:12px;background:var(--panel-2);border:1px solid var(--line)}
+.dob-compare .yr{font-family:var(--serif);font-size:26px;font-weight:700;display:block;margin-top:4px;color:var(--text)}
+
+/* ---------- Solutions ---------- */
+.sol-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:56px}
+@media(max-width:860px){.sol-grid{grid-template-columns:1fr}}
+.sol{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:36px;transition:all .4s var(--ease);box-shadow:var(--shadow-sm)}
+.sol:hover{transform:translateY(-6px);border-color:var(--line-strong);box-shadow:var(--shadow)}
+.sol .n{font-family:var(--mono);font-size:13px;color:var(--indigo)}
+.sol h3{font-family:var(--serif);font-size:23px;font-weight:600;margin:12px 0}
+.sol ul{list-style:none}
+.sol li{font-size:15px;color:var(--text-dim);padding:8px 0 8px 26px;position:relative}
+.sol li::before{content:"";position:absolute;left:0;top:15px;width:14px;height:1px;background:var(--indigo)}
+
+/* ---------- Industries ---------- */
+.ind-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:56px}
+@media(max-width:900px){.ind-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.ind-grid{grid-template-columns:1fr}}
+.ind{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:30px;text-align:center;transition:all .4s var(--ease);box-shadow:var(--shadow-sm)}
+.ind:hover{transform:translateY(-6px);border-color:var(--indigo-soft);box-shadow:var(--shadow)}
+.ind .ico{width:54px;height:54px;margin:0 auto 18px;border-radius:15px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--lav),var(--ice));border:1px solid var(--line)}
+.ind .ico svg{width:26px;height:26px;stroke:var(--indigo)}
+.ind h4{font-family:var(--serif);font-size:18px;font-weight:600;margin-bottom:8px}
+.ind p{font-size:14px;color:var(--text-dim)}
+
+/* market */
+.market{margin-top:64px;text-align:center;padding:68px 40px;border-radius:var(--r-lg);border:1px solid var(--line);background:linear-gradient(160deg,var(--lav),var(--ice));position:relative;overflow:hidden;box-shadow:var(--shadow-sm)}
+.market .big{font-family:var(--serif);font-size:clamp(48px,7vw,86px);font-weight:700;letter-spacing:-.03em;background:linear-gradient(120deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.market p{font-size:18px;color:var(--text-dim);margin-top:16px;max-width:560px;margin-inline:auto}
+
+/* ---------- Dashboard ---------- */
+.dash{margin-top:56px;border:1px solid var(--line-strong);border-radius:var(--r-lg);overflow:hidden;background:var(--panel);box-shadow:var(--shadow-lg)}
+.dash-bar{display:flex;align-items:center;gap:8px;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--panel-2)}
+.dash-bar .dots{display:flex;gap:7px}
+.dash-bar .dots i{width:11px;height:11px;border-radius:50%;display:block}
+.dash-bar .dots i:nth-child(1){background:#ff5f57}.dash-bar .dots i:nth-child(2){background:#febc2e}.dash-bar .dots i:nth-child(3){background:#28c840}
+.dash-bar .url{margin-left:14px;font-family:var(--mono);font-size:12px;color:var(--text-faint);background:var(--panel);padding:5px 14px;border-radius:7px;border:1px solid var(--line)}
+.dash-body{display:grid;grid-template-columns:220px 1fr;min-height:460px}
+@media(max-width:760px){.dash-body{grid-template-columns:1fr}}
+.dash-side{border-right:1px solid var(--line);padding:24px 16px;background:var(--panel-2)}
+@media(max-width:760px){.dash-side{display:none}}
+.dash-side .sl{display:flex;align-items:center;gap:11px;padding:11px 14px;border-radius:9px;font-size:14px;color:var(--text-dim);margin-bottom:4px;transition:all .2s}
+.dash-side .sl:hover{background:rgba(99,102,241,.05)}
+.dash-side .sl.on{background:rgba(99,102,241,.1);color:var(--indigo);font-weight:500}
+.dash-side .sl .sd{width:7px;height:7px;border-radius:2px;background:var(--text-faint)}
+.dash-side .sl.on .sd{background:var(--indigo)}
+.dash-main{padding:30px}
+.dash-main .dh{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:14px}
+.dash-main .dh h4{font-family:var(--serif);font-size:20px;font-weight:600}
+.dscore-ring{display:flex;align-items:center;gap:20px;padding:24px;border-radius:14px;background:var(--panel-2);border:1px solid var(--line);margin-bottom:20px}
+.ring{position:relative;width:96px;height:96px;flex:0 0 auto}
+.ring svg{transform:rotate(-90deg)}
+.ring .rval{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;font-size:28px}
+.dscore-info h5{font-family:var(--serif);font-size:17px;margin-bottom:4px}
+.dscore-info p{font-size:13px;color:var(--text-dim)}
+.dagent-row{display:flex;flex-direction:column;gap:10px}
+.dagent{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:11px;background:var(--panel-2);border:1px solid var(--line)}
+.dagent .da-ico{width:34px;height:34px;border-radius:9px;background:var(--lav);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.dagent .da-ico svg{width:17px;height:17px;stroke:var(--indigo)}
+.dagent .da-name{font-size:14px;font-weight:500;flex:1}
+.dagent .da-status{font-family:var(--mono);font-size:11px;display:flex;align-items:center;gap:7px}
+.dagent .da-status.done{color:var(--green)}
+.dagent .da-status .dt{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}
+.netcard{margin-top:24px;padding:24px;border-radius:14px;background:var(--panel-2);border:1px solid var(--line)}
+.netcard h5{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-faint);margin-bottom:14px}
+#net-canvas{width:100%;height:200px;display:block}
+
+/* ---------- Forms ---------- */
+.form-wrap{margin-top:56px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+@media(max-width:820px){.form-wrap{grid-template-columns:1fr}}
+.form-side h3{font-family:var(--serif);font-size:26px;font-weight:600;margin-bottom:16px}
+.form-side .fl{display:flex;gap:14px;align-items:flex-start;margin-bottom:22px}
+.form-side .fl .fi{width:40px;height:40px;border-radius:11px;background:var(--lav);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.form-side .fl .fi svg{width:18px;height:18px;stroke:var(--indigo)}
+.form-side .fl h6{font-family:var(--serif);font-size:15px;font-weight:600;margin-bottom:3px}
+.form-side .fl p{font-size:14px;color:var(--text-dim)}
+form.cip{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:36px;box-shadow:var(--shadow-sm)}
+.fg{margin-bottom:20px}
+.fg label{display:block;font-size:13px;color:var(--text-dim);margin-bottom:8px;font-weight:500}
+.fg input,.fg select,.fg textarea{width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:13px 16px;color:var(--text);font-family:inherit;font-size:15px;transition:all .25s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--indigo);box-shadow:0 0 0 3px rgba(99,102,241,.12);background:var(--panel)}
+.fg textarea{resize:vertical;min-height:90px}
+.form-msg{display:none;margin-top:16px;padding:14px 18px;border-radius:12px;font-size:14px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.28);color:var(--green)}
+.form-msg.show{display:block;animation:pageIn .5s var(--ease)}
+
+/* ---------- About ---------- */
+.about-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:56px}
+@media(max-width:760px){.about-stats{grid-template-columns:1fr 1fr}}
+.astat{padding:32px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);text-align:center;box-shadow:var(--shadow-sm)}
+.astat .n{font-family:var(--serif);font-size:40px;font-weight:700;letter-spacing:-.02em;background:linear-gradient(120deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.astat .l{font-size:13px;color:var(--text-faint);margin-top:6px}
+.vision{margin-top:56px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:760px){.vision{grid-template-columns:1fr}}
+.vcard{padding:38px;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--panel);box-shadow:var(--shadow-sm);transition:all .4s var(--ease)}
+.vcard:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+.vcard .vk{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--indigo);margin-bottom:14px}
+.vcard h4{font-family:var(--serif);font-size:21px;font-weight:600;margin-bottom:12px}
+.vcard p{font-size:15px;color:var(--text-dim)}
+
+/* leadership team */
+.team-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:48px}
+@media(max-width:680px){.team-grid{grid-template-columns:1fr}}
+.tcard{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:40px;overflow:hidden;transition:all .5s var(--ease);box-shadow:var(--shadow-sm)}
+.tcard:hover{transform:translateY(-6px);border-color:var(--line-strong);box-shadow:var(--shadow)}
+.tcard::after{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent-2));transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+.tcard:hover::after{transform:scaleX(1)}
+.tavatar{width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,var(--violet),var(--indigo-soft));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;font-size:26px;color:#fff;margin-bottom:24px;box-shadow:0 8px 24px rgba(99,102,241,.28)}
+.tcard h4{font-family:var(--serif);font-size:23px;font-weight:600;letter-spacing:-.01em;margin-bottom:6px}
+.tcard .role{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--indigo)}
+
+.tech-stack{margin-top:40px;display:flex;flex-wrap:wrap;gap:10px}
+.chip{font-family:var(--mono);font-size:12px;padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--text-dim);box-shadow:var(--shadow-sm)}
+.chip span{color:var(--green);margin-left:8px}
+
+/* CTA band */
+.cta-band{padding:120px 0;text-align:center;position:relative;overflow:hidden}
+.cta-band-inner{background:linear-gradient(150deg,var(--lav),var(--ice));border:1px solid var(--line);border-radius:32px;padding:80px 48px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.cta-band h2{font-family:var(--serif);font-size:clamp(30px,4.5vw,52px);font-weight:700;letter-spacing:-.03em;line-height:1.08;margin-bottom:22px}
+.cta-band p{font-size:19px;color:var(--text-dim);margin-bottom:36px}
+.cta-band .hero-ctas{justify-content:center}
+
+/* Footer */
+footer{border-top:1px solid var(--line);padding:72px 0 36px;background:var(--bg-soft)}
+.foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;margin-bottom:56px}
+@media(max-width:760px){.foot-grid{grid-template-columns:1fr 1fr}}
+.foot-brand p{font-size:14px;color:var(--text-dim);margin-top:18px;max-width:300px}
+.foot-col h5{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-faint);margin-bottom:18px}
+.foot-col a{display:block;font-size:14px;color:var(--text-dim);padding:6px 0;transition:color .2s}
+.foot-col a:hover{color:var(--indigo)}
+.foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:30px;border-top:1px solid var(--line);flex-wrap:wrap;gap:16px}
+.foot-bottom p{font-size:13px;color:var(--text-faint)}
+.foot-bottom .conf{font-family:var(--mono);font-size:11px;color:var(--text-faint);border:1px solid var(--line);padding:5px 12px;border-radius:7px;background:var(--panel)}
+
+/* mobile menu */
+.mobile-menu{position:fixed;inset:0;z-index:7999;background:rgba(248,250,255,.97);backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;opacity:0;visibility:hidden;transition:all .4s var(--ease)}
+.mobile-menu.open{opacity:1;visibility:visible}
+.mobile-menu a{font-family:var(--serif);font-size:28px;color:var(--text-dim);padding:12px;transition:color .2s}
+.mobile-menu a:hover,.mobile-menu a.active{color:var(--indigo)}
+
+@media(max-width:920px){
+  .nav-links{display:none}
+  .nav-cta .btn-ghost{display:none}
+  .menu-toggle{display:flex}
+  nav{padding:16px 24px}
+  nav.scrolled{padding:12px 24px}
+  .wrap,.wrap-wide{padding:0 24px}
+  .sec{padding:84px 0}
+  .hero-stats{gap:32px}
+}
+</style>
+</head>
+<body>
+
+
+<canvas id="bg-canvas"></canvas>
+<div class="bg-mesh">
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+  <div class="orb o3"></div>
+</div>
+<div id="progress"></div>
+
+<nav id="nav">
+  <a class="brand" data-nav="home" href="#">Vrence<b>S</b> Technologies</a>
+  <div class="nav-links" id="navlinks">
+    <a data-nav="home" class="active">Home</a>
+    <a data-nav="solutions">Solutions</a>
+    <a data-nav="industries">Industries</a>
+    <a data-nav="demo">Demo</a>
+    <a data-nav="about">About</a>
+    <a data-nav="contact">Contact</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn btn-ghost" data-nav="solutions">Explore Platform</button>
+    <button class="btn btn-glow" data-nav="contact">Request Demo</button>
+    <button class="menu-toggle" id="menuToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a data-nav="home">Home</a>
+  <a data-nav="solutions">Solutions</a>
+  <a data-nav="industries">Industries</a>
+  <a data-nav="demo">Demo</a>
+  <a data-nav="about">About</a>
+  <a data-nav="contact">Contact</a>
+</div>
+
+<!-- ============ HOME ============ -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="wrap-wide">
+      <div class="hero-inner">
+        <div class="hero-content">
+          <div class="tagline reveal"><span class="dot"></span>Built for RBI &amp; FIU-IND compliance</div>
+          <h1 class="reveal">Compliance intelligence <span class="grad">built for modern finance.</span></h1>
+          <p class="sub reveal">CIP is an AI-powered compliance investigation engine for Indian financial institutions. It screens customers against global sanctions, PEP databases, and adverse media — then catches the false positives that drain analyst time and bury real threats.</p>
+          <div class="hero-ctas reveal">
+            <button class="btn btn-primary btn-lg magnetic" data-nav="contact">Request Demo</button>
+            <button class="btn btn-ghost btn-lg magnetic" data-nav="solutions">Explore Platform</button>
+          </div>
+          <div class="hero-stats reveal">
+            <div class="hstat"><div class="num" data-count="165" data-suffix="K+">0</div><div class="lbl">Sanctioned entities screened</div></div>
+            <div class="hstat"><div class="num" data-count="4" data-suffix="">0</div><div class="lbl">Concurrent AI agents</div></div>
+            <div class="hstat"><div class="num" data-count="80" data-suffix="%">0</div><div class="lbl">Analyst time reclaimed</div></div>
+          </div>
+        </div>
+        <div class="hero-visual reveal mtilt">
+          <div class="hv-card">
+            <div class="hv-bar"><div class="dots"><i></i><i></i><i></i></div><span class="lbl">cip · live investigation</span></div>
+            <div class="hv-body">
+              <div class="hv-net"><canvas id="hero-net"></canvas></div>
+              <div class="hv-rows">
+                <div class="hv-row"><span class="agname">Sanctions Screening</span><span class="agstat"><span class="d"></span>screened &amp; resolved</span></div>
+                <div class="hv-row"><span class="agname">PEP Screening</span><span class="agstat"><span class="d"></span>tier resolved</span></div>
+                <div class="hv-row"><span class="agname">Adverse Media</span><span class="agstat"><span class="d"></span>scored</span></div>
+                <div class="hv-row"><span class="agname">Customer Verification</span><span class="agstat"><span class="d"></span>verified</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="hv-float f1"><div class="ft">Recommendation</div><div class="fv" style="color:var(--green)">CLEAR</div></div>
+          <div class="hv-float f2"><div class="ft">Investigation</div><div class="fv">Auditable trail</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="trust">
+    <div class="trust-label">Aligned with the data sources regulators recognize</div>
+    <div class="trust-row">
+      <span class="trust-item">OFAC</span>
+      <span class="trust-item">European Union</span>
+      <span class="trust-item">United Nations</span>
+      <span class="trust-item">RBI</span>
+      <span class="trust-item">SEBI</span>
+      <span class="trust-item">FIU-IND</span>
+    </div>
+  </div>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="reveal eyebrow">The problem</div>
+      <h2 class="reveal">Compliance teams spend their days proving innocents are innocent.</h2>
+      <p class="reveal lead">Every bank, NBFC, fintech, and payment company in India must screen every customer for sanctions, PEPs, and adverse media — generating hundreds of alerts a day, the vast majority of them false positives.</p>
+      <div class="problem-grid">
+        <div class="glass problem-card reveal mtilt">
+          <div class="problem-big">Most</div>
+          <h3>alerts are false positives</h3>
+          <p>Common names like Rajesh Kumar or Amit Shah match unrelated sanctioned entities. Analysts manually compare dates of birth, nationalities, and news — every single time, dozens of times daily.</p>
+        </div>
+        <div class="glass problem-card reveal mtilt">
+          <div class="problem-big">Hours</div>
+          <h3>lost per false alert, by hand</h3>
+          <p>An analyst searches multiple databases, reads articles, and eventually concludes it was a name collision. Real threats get buried. Analysts burn out. Compliance costs spiral.</p>
+        </div>
+        <div class="problem-statement reveal">
+          <div class="k">The core problem</div>
+          <p>Compliance teams spend the bulk of their time investigating false positives that a well-designed system could resolve in moments.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="cta-band">
+    <div class="wrap">
+      <div class="cta-band-inner reveal">
+        <h2>See CIP resolve a false positive<br>before it wastes an hour.</h2>
+        <p>See how CIP resolves a false positive in moments.</p>
+        <div class="hero-ctas">
+          <button class="btn btn-glow btn-lg magnetic" data-nav="demo">View live results</button>
+          <button class="btn btn-ghost btn-lg magnetic" data-nav="contact">Request demo</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ SOLUTIONS (combined) ============ -->
+<div class="page" id="page-solutions">
+  <!-- SECTION 1: The Platform -->
+  <section class="sec" style="padding-top:150px">
+    <div class="wrap">
+      <div class="reveal eyebrow">The platform</div>
+      <h2 class="reveal">How CIP works</h2>
+      <p class="reveal lead">Every screening request moves through a complete compliance review — sanctions, political exposure, adverse media, and identity verification — to produce one clear, defensible answer in moments.</p>
+      <div class="agents">
+        <div class="agent reveal mtilt">
+          <div class="agent-pulse"></div><div class="tag">Agent 01</div><h4>Sanctions Screening</h4>
+          <p>Screens every customer against global and domestic watchlists in seconds, turning hours of manual list-checking into an instant, audit-ready result.</p>
+          <div class="src">SOURCE / Trusted regulatory datasets</div>
+        </div>
+        <div class="agent reveal mtilt">
+          <div class="agent-pulse"></div><div class="tag">Agent 02</div><h4>PEP Screening</h4>
+          <p>Surfaces political exposure the moment it matters, giving analysts a clear view of who needs closer scrutiny without digging through registries by hand.</p>
+          <div class="src">SOURCE / Trusted regulatory datasets</div>
+        </div>
+        <div class="agent reveal mtilt">
+          <div class="agent-pulse"></div><div class="tag">Agent 03</div><h4>Adverse Media</h4>
+          <p>Brings relevant news and reputational risk signals straight to the analyst, replacing hours of manual searching with a focused view of what matters.</p>
+          <div class="src">SOURCE / Trusted intelligence and media sources</div>
+        </div>
+        <div class="agent reveal mtilt">
+          <div class="agent-pulse"></div><div class="tag">Agent 04</div><h4>Customer Verification</h4>
+          <p>Confirms customer identity against trusted verification sources, closing the loop between screening and onboarding without slowing the process down.</p>
+          <div class="src">SOURCE / Licensed identity verification providers</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: Solutions cards -->
+  <section class="sec" style="padding-top:0">
+    <div class="wrap">
+      <div class="reveal eyebrow">Solutions</div>
+      <h2 class="reveal">From screening tool to investigation platform</h2>
+      <p class="reveal lead">Most screening tools flag a name and stop. CIP determines whether the match is real, explains why, and tells the analyst what to do next.</p>
+      <div class="sol-grid">
+        <div class="sol reveal mtilt">
+          <div class="n">Sanctions screening</div><h3>Global coverage, local speed</h3>
+          <ul>
+            <li>Global sanctions coverage across the lists that matter most to Indian financial institutions.</li>
+            <li>Significantly reduced false positives, so analysts spend time on real risk, not noise.</li>
+            <li>Faster investigations, turning a multi-step manual check into a single clear result.</li>
+          </ul>
+        </div>
+        <div class="sol reveal mtilt">
+          <div class="n">PEP screening</div><h3>Tiered political exposure</h3>
+          <ul>
+            <li>Clear visibility into a customer's political exposure, the moment it's relevant.</li>
+            <li>Automatic risk prioritization, so the most significant exposures surface first.</li>
+            <li>Built-in compliance support that keeps every decision explainable and defensible.</li>
+          </ul>
+        </div>
+        <div class="sol reveal mtilt">
+          <div class="n">Adverse media</div><h3>Relevance-scored news intelligence</h3>
+          <ul>
+            <li>Discovers relevant intelligence from trusted news and media sources, not just keyword hits.</li>
+            <li>Faster reviews, with the noise filtered out before it ever reaches the analyst.</li>
+            <li>Better risk awareness across fraud, laundering, and corruption signals.</li>
+          </ul>
+        </div>
+        <div class="sol reveal mtilt">
+          <div class="n">Risk &amp; reporting</div><h3>One defensible answer</h3>
+          <ul>
+            <li>Unified risk assessment that brings every signal together into one clear picture.</li>
+            <li>Audit-ready reporting, formatted for regulators and internal review alike.</li>
+            <li>Actionable recommendations that tell the analyst exactly what to do next.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: Why It's Different -->
+  <section class="sec" style="padding-top:0">
+    <div class="wrap">
+      <div class="reveal eyebrow">Why it's different</div>
+      <h2 class="reveal">The same name. A different person.</h2>
+      <div class="spotlight reveal">
+        <div class="spot-bad">
+          <div class="k">Conventional tool</div>
+          <h4>Flags CRITICAL — same as Putin</h4>
+          <p>A common name appears on a sanctions list, so Rajesh Kumar is escalated to the highest level. That false escalation wastes an analyst's hour — and happens hundreds of times daily.</p>
+        </div>
+        <div class="spot-good">
+          <div class="k">CIP</div>
+          <h4>Holds at MEDIUM, explains why</h4>
+          <p>The name matched, but CIP looks deeper before deciding anything. Recognizing this isn't the same individual, it holds the case at a measured risk level instead of escalating blindly, and gives the analyst a clear next step — turning what would be an hour of manual digging into an instant, defensible call.</p>
+          <div class="dob-compare">
+            <div>Customer<span class="yr">1995</span></div>
+            <div>Sanctioned entity<span class="yr">1969</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ INDUSTRIES ============ -->
+<div class="page" id="page-industries">
+  <section class="sec" style="padding-top:150px">
+    <div class="wrap">
+      <div class="reveal eyebrow">Industries</div>
+      <h2 class="reveal">Built for India's regulated financial ecosystem</h2>
+      <p class="reveal lead">CIP targets organizations large enough to feel false-positive pain, but too small for in-house AI compliance teams.</p>
+      <div class="ind-grid">
+        <div class="ind reveal mtilt">
+          <div class="ico"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11m16-11v11M8 14v3m4-3v3m4-3v3"/></svg></div>
+          <h4>Banks</h4><p>High-volume onboarding under RBI KYC/AML mandates, enforced by FIU-IND.</p>
+        </div>
+        <div class="ind reveal mtilt">
+          <div class="ico"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg></div>
+          <h4>NBFCs</h4><p>Non-banking financial companies screening borrowers and counterparties at scale.</p>
+        </div>
+        <div class="ind reveal mtilt">
+          <div class="ico"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m3.75 0V9.349m-19.5 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614"/></svg></div>
+          <h4>Fintechs</h4><p>Fast-growing fintechs with 50–500 employees and 5–50 compliance analysts.</p>
+        </div>
+        <div class="ind reveal mtilt">
+          <div class="ico"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z"/></svg></div>
+          <h4>Payment companies</h4><p>Processors managing continuous merchant and customer screening obligations.</p>
+        </div>
+      </div>
+      <div class="market reveal">
+        <div class="big">10,000+</div>
+        <p>Regulated entities under RBI and FIU-IND mandates — and no AI-native investigation platform exists for the Indian regulatory framework today. CIP fills that gap.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ DEMO ============ -->
+<div class="page" id="page-demo">
+  <section class="sec" style="padding-top:150px">
+    <div class="wrap">
+      <div class="reveal eyebrow">Live results</div>
+      <h2 class="reveal">Real cases, real sanctions data</h2>
+      <p class="reveal lead">Results from a working prototype running against real sanctions data, with no staged or cached outputs.</p>
+      <div class="results reveal">
+        <div class="results-head"><div>Case</div><div>Risk</div><div>Score</div><div>What CIP does</div></div>
+        <div class="results-row">
+          <div class="rcase">Vladimir Putin <small>RU</small></div>
+          <div><span class="badge b-critical"><span class="dt"></span>CRITICAL · FILE STR</span></div>
+          <div class="rscore">100</div>
+          <div class="rwhat">Matched across 26 sanctions lists (OFAC, EU, UN). National-tier PEP. Recommends STR to FIU-IND within 7 days.</div>
+        </div>
+        <div class="results-row">
+          <div class="rcase">Nirav Modi <small>IN</small></div>
+          <div><span class="badge b-critical"><span class="dt"></span>CRITICAL · FILE STR</span></div>
+          <div class="rscore">100</div>
+          <div class="rwhat">Interpol Red Notice detected. Recommends immediate CCO escalation.</div>
+        </div>
+        <div class="results-row">
+          <div class="rcase">Rajesh Kumar <small>IN · DOB 1995</small></div>
+          <div><span class="badge b-medium"><span class="dt"></span>MEDIUM · REVIEW</span></div>
+          <div class="rscore">60</div>
+          <div class="rwhat">Name matched sanctions + PEP lists — but DOB contradicts (entity: 1969/1966 vs customer: 1995). Classified WEAK. Held at MEDIUM. Recommends obtaining PAN.</div>
+        </div>
+        <div class="results-row">
+          <div class="rcase">Ananya Subramanian <small>IN · PAN verified</small></div>
+          <div><span class="badge b-low"><span class="dt"></span>LOW · CLEAR</span></div>
+          <div class="rscore">0</div>
+          <div class="rwhat">No matches. PAN verified. Cleared for onboarding.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0">
+    <div class="wrap">
+      <div class="reveal eyebrow">Workspace preview</div>
+      <h2 class="reveal">The investigation workspace</h2>
+      <div class="dash reveal">
+        <div class="dash-bar"><div class="dots"><i></i><i></i><i></i></div><div class="url">cip.vrencestechnologies.com / investigate</div></div>
+        <div class="dash-body">
+          <div class="dash-side">
+            <div class="sl on"><span class="sd"></span>Investigations</div>
+            <div class="sl"><span class="sd"></span>Sanctions</div>
+            <div class="sl"><span class="sd"></span>PEP Registry</div>
+            <div class="sl"><span class="sd"></span>Adverse Media</div>
+            <div class="sl"><span class="sd"></span>Reports</div>
+            <div class="sl"><span class="sd"></span>Audit Trail</div>
+            <div class="sl"><span class="sd"></span>Settings</div>
+          </div>
+          <div class="dash-main">
+            <div class="dh"><h4>Case · Rajesh Kumar</h4><span class="badge b-medium"><span class="dt"></span>MEDIUM · REVIEW</span></div>
+            <div class="dscore-ring">
+              <div class="ring">
+                <svg width="96" height="96">
+                  <circle cx="48" cy="48" r="42" stroke="rgba(99,102,241,.12)" stroke-width="8" fill="none"/>
+                  <circle id="ringFill" cx="48" cy="48" r="42" stroke="#d97706" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="263.9" stroke-dashoffset="263.9"/>
+                </svg>
+                <div class="rval" id="ringVal">0</div>
+              </div>
+              <div class="dscore-info">
+                <h5>Risk score: 60 / 100 — held at MEDIUM</h5>
+                <p>WEAK match. DOB contradiction (customer 1995 vs entity 1969) prevents escalation. Recommendation: obtain PAN to confirm identity.</p>
+              </div>
+            </div>
+            <div class="dagent-row">
+              <div class="dagent"><div class="da-ico"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75"/></svg></div><div class="da-name">Sanctions Screening</div><div class="da-status done"><span class="dt"></span>WEAK match</div></div>
+              <div class="dagent"><div class="da-ico"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952"/></svg></div><div class="da-name">PEP Screening</div><div class="da-status done"><span class="dt"></span>WEAK match</div></div>
+              <div class="dagent"><div class="da-ico"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5"/></svg></div><div class="da-name">Adverse Media</div><div class="da-status done"><span class="dt"></span>No relevant articles</div></div>
+              <div class="dagent"><div class="da-ico"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"/></svg></div><div class="da-name">Customer Verification</div><div class="da-status done"><span class="dt"></span>PAN pending</div></div>
+            </div>
+            <div class="netcard"><h5>Identity correlation graph</h5><canvas id="net-canvas"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0">
+    <div class="wrap">
+      <div class="form-wrap">
+        <div class="form-side reveal">
+          <h3>Request a demo</h3>
+          <div class="fl"><div class="fi"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg></div><div><h6>See your own cases run</h6><p>We'll walk through live investigations against real sanctions data.</p></div></div>
+          <div class="fl"><div class="fi"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5"/></svg></div><div><h6>Investigations in moments</h6><p>Watch a long manual process collapse into an instant verdict.</p></div></div>
+          <div class="fl"><div class="fi"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75"/></svg></div><div><h6>Regulator-defensible output</h6><p>Every score traces to a signal; every decision explained in plain English.</p></div></div>
+        </div>
+        <form class="cip" id="demoForm" method="POST" action="https://formspree.io/f/mzdqnykg">
+          <input type="hidden" name="_subject" value="New Website Enquiry - Vrences Technologies">
+          <input type="hidden" name="_next" value="https://vrencestechnologies.com/thank-you.html">
+          <div class="fg"><label>Full name</label><input type="text" name="name" required placeholder="Your name"></div>
+          <div class="fg"><label>Work email</label><input type="email" name="email" required placeholder="you@company.com"></div>
+          <div class="fg"><label>Company</label><input type="text" name="company" required placeholder="Your institution"></div>
+          <div class="fg"><label>Organization type</label><select name="organization_type"><option>Bank</option><option>NBFC</option><option>Fintech</option><option>Payment company</option><option>Other</option></select></div>
+          <div class="fg"><label>Compliance team size</label><select name="team_size"><option>5–15 analysts</option><option>15–30 analysts</option><option>30–50 analysts</option><option>50+ analysts</option></select></div>
+          <button type="submit" class="btn btn-glow btn-lg magnetic" style="width:100%">Request Demo</button>
+          <div class="form-msg" id="demoMsg">Thank you — we'll be in touch shortly to schedule your CIP walkthrough.</div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ ABOUT ============ -->
+<div class="page" id="page-about">
+  <section class="sec" style="padding-top:150px">
+    <div class="wrap">
+      <div class="reveal eyebrow">About VrenceS</div>
+      <h2 class="reveal">Building the compliance intelligence infrastructure for India's financial ecosystem.</h2>
+      <p class="reveal lead">CIP turns compliance investigations from a long manual process into an AI-driven workflow — without sacrificing explainability, auditability, or regulatory defensibility.</p>
+
+      <div class="vision">
+        <div class="vcard reveal mtilt">
+          <div class="vk">Mission</div>
+          <h4>Resolve investigations in moments, not hours</h4>
+          <p>We're eliminating the manual burden of false-positive investigation — giving compliance teams fast, defensible answers that satisfy regulators and scale with business growth.</p>
+        </div>
+        <div class="vcard reveal mtilt">
+          <div class="vk">Vision</div>
+          <h4>Compliance intelligence infrastructure for India</h4>
+          <p>Build the AI layer for India's regulated financial ecosystem — one that works alongside existing vendors, integrates into existing systems, and improves continuously.</p>
+        </div>
+      </div>
+
+      <div style="margin-top:96px">
+        <div class="reveal eyebrow">Leadership</div>
+        <h2 class="reveal">The founding team</h2>
+        <div class="team-grid">
+          <div class="tcard reveal">
+            <div class="tavatar">EV</div>
+            <h4>E. Viswanathan Harri</h4>
+            <div class="role">Co-Founder</div>
+          </div>
+          <div class="tcard reveal">
+            <div class="tavatar">SS</div>
+            <h4>Subinav S.</h4>
+            <div class="role">Co-Founder</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ CONTACT ============ -->
+<div class="page" id="page-contact">
+  <section class="sec" style="padding-top:150px">
+    <div class="wrap">
+      <div class="reveal eyebrow">Contact</div>
+      <h2 class="reveal">Let's talk compliance intelligence</h2>
+      <p class="reveal lead">Tell us about your screening volume and false-positive load. We'll show you what CIP resolves in moments.</p>
+      <div class="form-wrap">
+        <div class="form-side reveal">
+          <div class="fl"><div class="fi"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"/></svg></div><div><h6>Email</h6><p>info@vrencestechnologies.com</p></div></div>
+          <div class="fl"><div class="fi"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/></svg></div><div><h6>Headquarters</h6><p>Tamil Nadu, India</p></div></div>
+          <div class="fl"><div class="fi"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/></svg></div><div><h6>Built for</h6><p>RBI &amp; FIU-IND regulated institutions</p></div></div>
+        </div>
+        <form class="cip" id="contactForm" method="POST" action="https://formspree.io/f/mjgdnjdb">
+          <input type="hidden" name="_subject" value="New Contact Form Submission - Vrences Technologies">
+          <input type="hidden" name="_next" value="https://vrencestechnologies.com/thank-you.html">
+          <div class="fg"><label>Full name</label><input type="text" name="name" required placeholder="Your name"></div>
+          <div class="fg"><label>Work email</label><input type="email" name="email" required placeholder="you@company.com"></div>
+          <div class="fg"><label>Company</label><input type="text" name="company" required placeholder="Your institution"></div>
+          <div class="fg"><label>How can we help?</label><textarea name="message" placeholder="Tell us about your screening volume and compliance challenges..."></textarea></div>
+          <button type="submit" class="btn btn-glow btn-lg magnetic" style="width:100%">Send message</button>
+          <div class="form-msg" id="contactMsg">Thank you — your message has reached our team. We'll respond shortly.</div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" data-nav="home" href="#">Vrence<b>S</b> Technologies</a>
+        <p>AI-powered compliance investigation for Indian financial institutions. Defensible answers in moments, not hours.</p>
+      </div>
+      <div class="foot-col"><h5>Platform</h5><a data-nav="solutions">How CIP works</a><a data-nav="solutions">Solutions</a><a data-nav="demo">Live results</a><a data-nav="demo">Request demo</a></div>
+      <div class="foot-col"><h5>Company</h5><a data-nav="about">About</a><a data-nav="industries">Industries</a><a data-nav="contact">Contact</a><a data-nav="about">Vision</a></div>
+      <div class="foot-col"><h5>Compliance</h5><a data-nav="solutions">Sanctions screening</a><a data-nav="solutions">PEP screening</a><a data-nav="solutions">Adverse media</a><a data-nav="solutions">Risk &amp; reporting</a></div>
+    </div>
+    <div class="foot-bottom">
+      <p>© 2026 VrenceS Technologies. All rights reserved.</p>
+      <span class="conf">Aligned with RBI KYC/AML · FIU-IND</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+
+/* Scroll progress + nav */
+const nav=document.getElementById('nav'),progress=document.getElementById('progress');
+addEventListener('scroll',()=>{
+  const h=document.documentElement.scrollHeight-innerHeight;
+  progress.style.width=(scrollY/h*100)+'%';
+  nav.classList.toggle('scrolled',scrollY>30);
+});
+
+/* SPA navigation */
+const pages=document.querySelectorAll('.page');
+function go(name){
+  pages.forEach(p=>p.classList.toggle('active',p.id==='page-'+name));
+  document.querySelectorAll('[data-nav]').forEach(a=>a.classList.toggle('active',a.dataset.nav===name && a.closest('#navlinks,#mobileMenu')));
+  scrollTo({top:0,behavior:'smooth'});closeMenu();
+  setTimeout(initReveals,60);
+  if(name==='demo')setTimeout(animateRing,400);
+  if(name==='home'||name==='about')setTimeout(initCounters,300);
+}
+document.querySelectorAll('[data-nav]').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();go(el.dataset.nav)}));
+
+/* Mobile menu */
+const menuToggle=document.getElementById('menuToggle'),mobileMenu=document.getElementById('mobileMenu');
+let menuOpen=false;
+function closeMenu(){menuOpen=false;mobileMenu.classList.remove('open')}
+menuToggle.addEventListener('click',()=>{menuOpen=!menuOpen;mobileMenu.classList.toggle('open',menuOpen)});
+
+/* Reveal on scroll */
+let io;
+function initReveals(){
+  const els=document.querySelectorAll('.page.active .reveal:not(.in)');
+  if(io)io.disconnect();
+  io=new IntersectionObserver(entries=>{entries.forEach((en,i)=>{if(en.isIntersecting){setTimeout(()=>en.target.classList.add('in'),i*70);io.unobserve(en.target)}})},{threshold:.12});
+  els.forEach(el=>io.observe(el));
+}
+initReveals();
+
+/* Counters */
+function initCounters(){
+  document.querySelectorAll('.page.active [data-count]').forEach(el=>{
+    if(el.dataset.done)return;
+    const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){el.dataset.done=1;const target=+el.dataset.count,suf=el.dataset.suffix||'';let cur=0;const step=target/45;const t=setInterval(()=>{cur+=step;if(cur>=target){cur=target;clearInterval(t)}el.textContent=Math.floor(cur)+suf},22);obs.unobserve(el)}})},{threshold:.4});
+    obs.observe(el);
+  });
+}
+initCounters();
+
+/* Magnetic buttons */
+const fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
+if(fine){
+  document.querySelectorAll('.magnetic').forEach(btn=>{
+    btn.addEventListener('mousemove',e=>{const r=btn.getBoundingClientRect();const x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2;btn.style.transform=`translate(${x*.22}px,${y*.3}px)`});
+    btn.addEventListener('mouseleave',()=>btn.style.transform='');
+  });
+  /* Tilt + mouse-pos glow */
+  document.querySelectorAll('.mtilt').forEach(c=>{
+    c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();const px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;c.style.setProperty('--mx',px*100+'%');c.style.setProperty('--my',py*100+'%');c.style.transform=`translateY(-5px) rotateX(${(.5-py)*4}deg) rotateY(${(px-.5)*4}deg)`});
+    c.addEventListener('mouseleave',()=>c.style.transform='');
+  });
+}
+
+/* Ambient background particle field (subtle, light) */
+const bg=document.getElementById('bg-canvas'),bx=bg.getContext('2d');
+let bp=[],BW,BH,pmx=-999,pmy=-999;
+function sizeBg(){BW=bg.width=innerWidth;BH=bg.height=innerHeight;bp=[];const n=Math.min(70,Math.floor(BW*BH/26000));for(let i=0;i<n;i++)bp.push({x:Math.random()*BW,y:Math.random()*BH,vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22,r:Math.random()*1.6+.6})}
+addEventListener('mousemove',e=>{pmx=e.clientX;pmy=e.clientY});
+function bgLoop(){
+  bx.clearRect(0,0,BW,BH);
+  for(let i=0;i<bp.length;i++){
+    const p=bp[i];p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0||p.x>BW)p.vx*=-1;if(p.y<0||p.y>BH)p.vy*=-1;
+    const dxm=p.x-pmx,dym=p.y-pmy,dm=Math.hypot(dxm,dym);
+    if(dm<140){p.x+=dxm/dm*.6;p.y+=dym/dm*.6}
+    bx.beginPath();bx.arc(p.x,p.y,p.r,0,7);bx.fillStyle='rgba(129,140,248,.5)';bx.fill();
+    for(let j=i+1;j<bp.length;j++){const q=bp[j],dx=p.x-q.x,dy=p.y-q.y,d=Math.hypot(dx,dy);if(d<130){bx.beginPath();bx.moveTo(p.x,p.y);bx.lineTo(q.x,q.y);bx.strokeStyle='rgba(129,140,248,'+(1-d/130)*.12+')';bx.lineWidth=1;bx.stroke()}}
+  }
+  requestAnimationFrame(bgLoop);
+}
+sizeBg();bgLoop();
+addEventListener('resize',()=>{sizeBg();sizeNet();sizeHeroNet()});
+
+/* Hero mini network */
+const hnet=document.getElementById('hero-net');let hnx,hnodes=[],HNW,HNH;
+function sizeHeroNet(){if(!hnet)return;hnx=hnet.getContext('2d');HNW=hnet.width=hnet.offsetWidth;HNH=hnet.height=hnet.offsetHeight;
+  hnodes=[{x:HNW*.5,y:HNH*.5,r:8,c:'#6366F1'},{x:HNW*.2,y:HNH*.28,r:5,c:'#818CF8'},{x:HNW*.82,y:HNH*.24,r:5,c:'#818CF8'},{x:HNW*.8,y:HNH*.76,r:5,c:'#C4B5FD'},{x:HNW*.22,y:HNH*.74,r:5,c:'#C4B5FD'},{x:HNW*.5,y:HNH*.14,r:4,c:'#a5b4fc'}]}
+function heroNetLoop(){
+  if(!hnet||!hnet.offsetParent){requestAnimationFrame(heroNetLoop);return}
+  hnx.clearRect(0,0,HNW,HNH);const c=hnodes[0];
+  for(let i=1;i<hnodes.length;i++){hnx.beginPath();hnx.moveTo(c.x,c.y);hnx.lineTo(hnodes[i].x,hnodes[i].y);hnx.strokeStyle='rgba(99,102,241,.25)';hnx.lineWidth=1.2;hnx.stroke()}
+  const t=Date.now()/1000;
+  hnodes.forEach((n,i)=>{const oy=i===0?0:Math.sin(t+i)*3;hnx.beginPath();hnx.arc(n.x,n.y+oy,n.r,0,7);hnx.fillStyle=n.c;hnx.shadowColor=n.c;hnx.shadowBlur=12;hnx.fill();hnx.shadowBlur=0});
+  requestAnimationFrame(heroNetLoop);
+}
+sizeHeroNet();heroNetLoop();
+
+/* Demo ring */
+function animateRing(){
+  const fill=document.getElementById('ringFill'),val=document.getElementById('ringVal');if(!fill)return;
+  const circ=263.9,target=60;
+  fill.style.transition='stroke-dashoffset 1.4s cubic-bezier(.16,1,.3,1)';
+  fill.style.strokeDashoffset=circ-(circ*target/100);
+  let c=0;const t=setInterval(()=>{c+=2;if(c>=target){c=target;clearInterval(t)}val.textContent=c},28);
+}
+
+/* Demo network graph */
+const nc=document.getElementById('net-canvas');let nx,nodes=[],NW,NH;
+function sizeNet(){if(!nc)return;nx=nc.getContext('2d');NW=nc.width=nc.offsetWidth;NH=nc.height=nc.offsetHeight;
+  nodes=[{x:NW*.5,y:NH*.5,r:9,c:'#d97706'},{x:NW*.2,y:NH*.3,r:6,c:'#6366F1'},{x:NW*.8,y:NH*.25,r:6,c:'#6366F1'},{x:NW*.78,y:NH*.78,r:6,c:'#8b5cf6'},{x:NW*.22,y:NH*.75,r:6,c:'#8b5cf6'},{x:NW*.5,y:NH*.15,r:5,c:'#e23b5a'}]}
+function netLoop(){
+  if(!nc||!nc.offsetParent){requestAnimationFrame(netLoop);return}
+  nx.clearRect(0,0,NW,NH);const c=nodes[0];
+  for(let i=1;i<nodes.length;i++){nx.beginPath();nx.moveTo(c.x,c.y);nx.lineTo(nodes[i].x,nodes[i].y);nx.strokeStyle='rgba(99,102,241,.22)';nx.lineWidth=1;nx.stroke()}
+  const t=Date.now()/1000;
+  nodes.forEach((n,i)=>{const oy=i===0?0:Math.sin(t+i)*3;nx.beginPath();nx.arc(n.x,n.y+oy,n.r,0,7);nx.fillStyle=n.c;nx.shadowColor=n.c;nx.shadowBlur=12;nx.fill();nx.shadowBlur=0})
+  requestAnimationFrame(netLoop);
+}
+sizeNet();netLoop();
+
+/* Forms */
+function bindForm(id,msgId){const f=document.getElementById(id);if(!f)return;f.addEventListener('submit',e=>{e.preventDefault();const data=new FormData(f);fetch(f.action,{method:'POST',body:data,headers:{'Accept':'application/json'}}).then(()=>{document.getElementById(msgId).classList.add('show');f.querySelectorAll('input,textarea,select').forEach(i=>i.value='');setTimeout(()=>{location.href=f.querySelector('[name="_next"]').value},5000)}).catch(()=>{f.submit()})})}
+bindForm('demoForm','demoMsg');bindForm('contactForm','contactMsg');
+
+/* keyboard a11y */
+document.querySelectorAll('[data-nav]').forEach(el=>{el.setAttribute('tabindex','0');el.setAttribute('role','link');el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go(el.dataset.nav)}})});
+</script>
+</body>
+</html>
